@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { BASE, PROTEINS, SIDES, WHATSAPP, formatPrice, type Option } from "../data/menu";
+import { PLATES, PROTEINS, SIDES, WHATSAPP, formatPrice, type Option } from "../data/menu";
 
-type Plate = { protein: string; sides: string[]; qty: number };
+type Plate = { size: string; protein: string; sides: string[]; qty: number };
 const byId = (list: Option[], id: string) => list.find((o) => o.id === id)!;
 const plateTotal = (p: Plate) =>
-  BASE.price + byId(PROTEINS, p.protein).price + p.sides.reduce((s, id) => s + byId(SIDES, id).price, 0);
+  byId(PLATES, p.size).price + byId(PROTEINS, p.protein).price + p.sides.reduce((s, id) => s + byId(SIDES, id).price, 0);
 const describe = (p: Plate) =>
-  [BASE.name, p.protein !== "none" && byId(PROTEINS, p.protein).name, ...p.sides.map((id) => byId(SIDES, id).name)]
+  [`${byId(PLATES, p.size).name} Jollof Rice`, p.protein !== "none" && byId(PROTEINS, p.protein).name, ...p.sides.map((id) => byId(SIDES, id).name)]
     .filter(Boolean).join(" + ");
 
 /* Where each extra sits on the plate. Percentages of the plate box. */
@@ -37,7 +37,7 @@ function Chip({ active, onClick, children, label }: { active: boolean; onClick: 
 }
 
 export default function OrderForm() {
-  const [plate, setPlate] = useState<Plate>({ protein: "chicken", sides: ["plantain"], qty: 1 });
+  const [plate, setPlate] = useState<Plate>({ size: "Big Plate", protein: "chicken", sides: ["plantain"], qty: 1 });
   const [cart, setCart] = useState<Plate[]>([]);
   const [form, setForm] = useState({ name: "", phone: "", mode: "Delivery", address: "", note: "" });
   const [pulse, setPulse] = useState(0);
@@ -77,7 +77,7 @@ export default function OrderForm() {
             <div className="absolute inset-[6%] rounded-full ring-1 ring-char/5" />
             <div
               className="plate-rice absolute overflow-hidden rounded-[46%_54%_50%_50%/52%_48%_52%_48%]"
-              style={{ inset: "18%" }}
+              style={{ inset: plate.size === "Big Plate" ? "14%" : "24%" }}
             >
               <Image src="/crops/rice.webp" alt="" fill sizes="300px" className="object-cover" />
             </div>
@@ -103,13 +103,22 @@ export default function OrderForm() {
 
           {/* the choices */}
           <div className="space-y-6">
-            <div className="flex items-baseline justify-between rounded-2xl bg-blush px-4 py-3">
-              <span className="font-display text-lg font-extrabold uppercase">Plate of {BASE.name}</span>
-              <span className="font-mono text-sm text-bq-red">{formatPrice(BASE.price)}</span>
-            </div>
+            <fieldset>
+              <legend className="font-display text-lg font-extrabold uppercase">Jollof rice</legend>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {PLATES.map((r) => (
+                  <Chip key={r.id} active={plate.size === r.id} onClick={() => setPlate({ ...plate, size: r.id })}>
+                    <span className="flex flex-col leading-tight">
+                      <span className="font-display font-extrabold uppercase">{r.name}</span>
+                      <span className="font-mono text-xs opacity-80">{formatPrice(r.price)}</span>
+                    </span>
+                  </Chip>
+                ))}
+              </div>
+            </fieldset>
 
             <fieldset>
-              <legend className="font-display text-lg font-extrabold uppercase">Protein</legend>
+              <legend className="font-display text-lg font-extrabold uppercase">Add protein</legend>
               <div className="mt-2 grid grid-cols-2 gap-2">
                 {PROTEINS.map((p) => (
                   <Chip key={p.id} active={plate.protein === p.id} onClick={() => setPlate({ ...plate, protein: p.id })}>
@@ -124,7 +133,7 @@ export default function OrderForm() {
             </fieldset>
 
             <fieldset>
-              <legend className="font-display text-lg font-extrabold uppercase">Sides</legend>
+              <legend className="font-display text-lg font-extrabold uppercase">Add sides</legend>
               <div className="mt-2 grid grid-cols-2 gap-2">
                 {SIDES.map((s) => (
                   <Chip key={s.id} active={plate.sides.includes(s.id)} onClick={() => toggleSide(s.id)}>

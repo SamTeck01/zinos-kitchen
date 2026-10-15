@@ -1,6 +1,3 @@
-import CravingCategories from "../components/CravingCategories";
-import Favourites from "../components/Favourites";
-import MenuSection from "../components/MenuSection";
 import { LOCATIONS, ZINO } from "@/data/menu";
 import Locations from "../components/Locations";
 import Closing from "../components/Closing";
@@ -18,12 +15,9 @@ export default function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@graph": [restaurant, menu] }) }} />
       <HeroOverlay />
-      <CravingCategories />
-      <Favourites />
-      <Section id="order" eyebrow="Plate it your way" title="BUILD YOUR PLATE" tone="paper">
+      <Section id="order" eyebrow="Small plate or big plate" title="BUILD YOUR PLATE" tone="paper">
         <OrderForm />
       </Section>
-      <MenuSection />
       <Packages />
       <Locations />
       <Closing />

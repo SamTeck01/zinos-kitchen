@@ -32,27 +32,14 @@ export const ZINO: MenuCategory[] = [
     id: "jollof",
     label: "Jollof Rice",
     items: [
-      { name: "Jollof Rice", desc: "A plate of smoky jollof rice", price: 2500 },
-      { name: "Jollof Rice & Chicken", desc: "Jollof rice, fried chicken", price: 5000 },
-      { name: "Jollof Rice & Fish", desc: "Jollof rice, fried fish", price: 5500 },
-      { name: "Jollof Rice & Beef", desc: "Jollof rice, beef", price: 4500 },
-    ],
-  },
-  {
-    id: "proteins",
-    label: "Proteins",
-    items: [
-      { name: "Fried Chicken", price: 2500 },
-      { name: "Fried Fish", price: 3000 },
-      { name: "Beef", price: 2000 },
-    ],
-  },
-  {
-    id: "sides",
-    label: "Sides",
-    items: [
-      { name: "Fried Plantain", price: 1000 },
-      { name: "Coleslaw", price: 800 },
+      {
+        name: "Jollof Rice",
+        desc: "Smoky jollof rice",
+        sizes: [
+          { label: "Small Plate", price: 2500 },
+          { label: "Big Plate", price: 4000 },
+        ],
+      },
     ],
   },
 ];
@@ -118,8 +105,8 @@ export const CITY = "Ilorin";
 /** Orders close Friday 6pm for Saturday's cook. */
 export const CUTOFF = { weekday: 5, hour: 18 };
 
-/** Plate builder: a plate of jollof, then a protein and sides. */
-export const BASE: Option = { id: "jollof", name: "Jollof Rice", price: 2500 };
+/** Plate builder: small or big plate of jollof, then extras. Extras are never sold alone. */
+export const PLATES: Option[] = ZINO[0].items[0].sizes!.map((s) => ({ id: s.label, name: s.label, price: s.price }));
 export const PROTEINS: Option[] = [
   { id: "none", name: "No protein", price: 0 },
   { id: "chicken", name: "Chicken", price: 2500, img: "/crops/chicken.webp" },

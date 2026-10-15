@@ -30,7 +30,7 @@ export default function HeroOverlay() {
           <div className="overflow-hidden rounded-[2rem] shadow-[0_30px_60px_-24px_rgba(165,6,2,0.5)]">
             <HeroVideo />
           </div>
-          <p className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red md:text-xs">Plates every day · Litres on Saturday</p>
+          <p className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red md:text-xs">Small plate · Big plate · By the litre</p>
         </div>
 
         {/* right margin on desktop: next pot + number */}
