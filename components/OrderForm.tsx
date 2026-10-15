@@ -114,49 +114,35 @@ export default function OrderForm() {
 
   return (
     <>
-      {/* ---------- the package, on the page: BQ's image cards ---------- */}
-      <ul className="grid grid-cols-2 gap-3 sm:gap-4">
+      {/* ---------- the package, on the page ---------- */}
+      <ul className="grid grid-cols-2 gap-3 sm:gap-5">
         {PACKS.map((p) => (
           <li key={p.id}>
-            <button
-              type="button"
-              onClick={() => show(0, p.id)}
-              className="press relative block aspect-[3/4] w-full overflow-hidden rounded-2xl border border-char/10 text-left"
-            >
-              <Image src={p.img!} alt={p.name} fill sizes="(max-width:640px) 50vw, 24rem" className="object-cover" />
-              <span className="absolute inset-x-0 bottom-0 border-t border-paper/40 bg-paper/80 p-3 backdrop-blur-sm">
-                <span className="block font-display text-sm font-extrabold uppercase leading-tight text-char sm:text-base">{p.name}</span>
-                <span className="mt-1 flex items-center justify-between">
-                  <span className="font-mono text-sm text-bq-red">{formatPrice(p.price)}</span>
-                  <span className="flex size-8 items-center justify-center rounded-full bg-bq-red text-white" aria-hidden="true">
-                    <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M10 4v12M4 10h12" /></svg>
-                  </span>
-                </span>
+            <button type="button" onClick={() => show(0, p.id)} className="press group block w-full text-left">
+              <span className="relative block aspect-square overflow-hidden rounded-2xl">
+                <Image src={p.img!} alt={p.name} fill sizes="(max-width:640px) 50vw, 24rem" className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
               </span>
+              <span className="mt-2 block font-display text-sm font-extrabold uppercase leading-tight sm:text-base">{p.name}</span>
+              <span className="font-mono text-sm text-bq-red">{formatPrice(p.price)}</span>
             </button>
           </li>
         ))}
       </ul>
 
-      <div className="mt-6">
-        <p className="font-display text-lg font-extrabold uppercase">Extras</p>
-        <ul className="mt-1 divide-y divide-char/10">
+      <div className="mt-6 rounded-3xl bg-blush p-5 sm:p-6">
+        <p className="font-display text-xl font-extrabold uppercase">Extras</p>
+        <ul className="mt-2 grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-5">
           {EXTRAS.map((e) => (
-            <li key={e.id} className="flex items-baseline justify-between py-2.5">
+            <li key={e.id} className="flex items-baseline justify-between border-b border-char/10 py-2">
               <span>{e.name}</span><span className="font-mono text-bq-red">{formatPrice(e.price)}</span>
             </li>
           ))}
         </ul>
+        <ul className="mt-4 space-y-1 font-mono text-xs uppercase tracking-wider text-char/70">
+          {SCHEDULE.map((s) => <li key={s}>{s}</li>)}
+          <li className="text-deep-red">Note: {DELIVERY_NOTE}</li>
+        </ul>
       </div>
-
-      <div className="mt-6 space-y-1.5 rounded-2xl bg-blush p-4 text-sm">
-        {SCHEDULE.map((s) => <p key={s}>{s}.</p>)}
-        <p className="text-deep-red">{DELIVERY_NOTE}.</p>
-      </div>
-
-      <button type="button" onClick={() => show(0)} className="press mt-6 flex min-h-14 w-full items-center justify-center rounded-full bg-bq-red font-display text-lg font-extrabold uppercase text-white hover:bg-deep-red sm:w-auto sm:px-10">
-        Build your order
-      </button>
 
       {/* ---------- cart pill ---------- */}
       {count > 0 && !open && (

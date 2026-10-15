@@ -3,9 +3,10 @@ import Image from "next/image";
 import OrderButton from "./OrderButton";
 import CookDay from "./CookDay";
 import { useCity } from "../data/cityContext";
+import { PACKS, formatPrice } from "../data/menu";
 
 /**
- * BQ's hero layout with Zino's food in a circle: food centred and big, small
+ * BQ's hero layout with Zino's food in a rounded square: food centred and big, small
  * red mono labels diagonally opposed above/below it, order pill, motto, phone.
  * Desktop moves the motto to the left margin and the info to the right.
  */
@@ -16,8 +17,11 @@ export default function HeroOverlay() {
       <div className="mx-auto flex max-w-7xl flex-col items-center px-5 pb-12 pt-8 lg:grid lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-12 lg:px-12 lg:py-10">
         {/* the food */}
         <div className="w-full max-w-[22rem] lg:order-2 lg:w-[min(40vw,70vh)] lg:max-w-none">
-          <p className="mb-3 text-right font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red">Pre-order Thu &amp; Fri</p>
-          <div className="relative aspect-square overflow-hidden rounded-full shadow-[0_28px_50px_-22px_rgba(165,6,2,0.55)] ring-8 ring-white">
+          <p className="mb-5 text-right font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red">Pre-order Thu &amp; Fri</p>
+          <div className="relative">
+            <span aria-hidden="true" className="absolute -inset-3 -z-0 rotate-[-4deg] rounded-[2.25rem] bg-blush" />
+            <span aria-hidden="true" className="absolute -right-2 -top-3 z-10 rotate-6 rounded-full bg-gold px-3 py-1.5 font-display text-xs font-extrabold uppercase text-char shadow-md">From {formatPrice(PACKS[0].price)}</span>
+          <div className="relative aspect-square overflow-hidden rounded-[2rem] shadow-[0_28px_50px_-22px_rgba(165,6,2,0.55)]">
             <Image
               src="/zino/hero.webp"
               alt="Zino's jollof rice with chicken and turkey, plantain and coleslaw"
@@ -27,7 +31,8 @@ export default function HeroOverlay() {
               className="object-cover object-[50%_35%]"
             />
           </div>
-          <p className="mt-4 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red">Weekend morning delivery</p>
+          </div>
+          <p className="mt-6 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red">Weekend morning delivery</p>
         </div>
 
         {/* motto */}
