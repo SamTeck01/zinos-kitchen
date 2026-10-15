@@ -16,10 +16,10 @@ export default function HeroVideo() {
   return (
     <video
       ref={ref}
-      className="aspect-square w-full object-cover"
+      className="aspect-[3/4] w-full object-cover"
       autoPlay muted loop playsInline preload="metadata"
       poster="/media/jollof-poster.jpg"
-      aria-label="Plate of smoky jollof rice with fried fish and plantain"
+      aria-label="Zino's jollof rice with chicken and turkey, plantain and coleslaw"
     >
       <source src="/media/jollof.webm" type="video/webm" />
       <source src="/media/jollof.mp4" type="video/mp4" />

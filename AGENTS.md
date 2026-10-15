@@ -3,22 +3,26 @@
 Built from the BQ Cuisine codebase (same components, palette, type and rules).
 Differences from BQ:
 
-- **Zino's Kitchen** has TWO offers, like BQ's menu + platters:
-  1. **Jollof rice** in a Small Plate or Big Plate (`ZINO`), ordered through
-     the plate builder. Proteins and sides are extras on a plate, never sold
-     alone.
-  2. **Food by the litre** (`LITRES`) — jollof, fried rice, stew, beans,
-     amala, eba, fufu, iyan — ordered in the week and cooked on **Saturday**.
-     Orders close Friday 6pm (`CUTOFF`). Rendered by `Packages.tsx`.
+- **Zino's Cakes & Events** (WhatsApp 0807 906 0151, IG @zinoscakes_and_event).
+  Source of truth: Zino's flyer + WhatsApp chat (15 Oct 2026). TWO offers:
+  1. **Zino's Package** — the main, first focus. Jollof Rice & Chicken N3,000,
+     Jollof Rice & Turkey N6,000 (Zino said 6k in chat; flyer's N5,000 is old).
+     Extras: Jollof Rice 700, Coleslaw 600, Chicken 1,900, Plantain 600,
+     Turkey 3,800. Ordered through the builder modal (`OrderForm.tsx`).
+     **No fish, no beef** — Zino does not sell them with jollof.
+  2. **Food by the litre** (`LITRES`, `Packages.tsx`) — below the package.
+     No prices confirmed: cards ask on WhatsApp until `sizes` are added.
+- Flyer lines (verbatim): "Pre-order on Thursdays & Fridays", "Morning delivery
+  available on weekends to all locations on campus", "Delivery attracts
+  additional charges".
+- Photos are Zino's own (`public/zino/`). Never use stock or 3D/cartoon food.
 - One city (Ilorin). There is no city switch. `City` keeps both keys only so
   BQ's city-aware components type-check; both point to the same data.
 - The hero is a looping video (`components/HeroVideo.tsx`), not scroll frames.
   `ScrollFramesHero.tsx` is not used.
-- Plate builder: `components/OrderForm.tsx` (small/big plate → protein →
-  sides → cart → WhatsApp).
+- Builder: `components/OrderForm.tsx` (pack → extras → order → details →
+  WhatsApp).
 - No Chowdeck. WhatsApp only.
-- Every price, the WhatsApp number and the pickup point in `data/menu.ts` are
-  PLACEHOLDERS until Zino confirms them.
 
 The BQ rules below still apply where they make sense (mobile first, palette,
 `formatPrice`, never invent facts, motion rules, accessibility, definition of

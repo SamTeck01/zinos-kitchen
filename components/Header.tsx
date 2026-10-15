@@ -14,10 +14,10 @@ export default function Header() {
       <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-12">
         <Link
           href="#top"
-          aria-label="Zino's Kitchen — back to top"
+          aria-label="Zino's — back to top"
           className="flex items-center"
         >
-          <span className="font-display text-xl font-extrabold uppercase tracking-tight text-bq-red">Zino&apos;s Kitchen</span>
+          <span className="leading-none"><span className="block font-display text-xl font-extrabold uppercase tracking-tight text-bq-red">Zino&apos;s</span><span className="block font-mono text-[0.6rem] uppercase tracking-[0.2em] text-char/70">Cakes &amp; Events</span></span>
         </Link>
         <a href="#order" className="flex min-h-11 items-center rounded-full bg-bq-red px-5 font-mono text-xs uppercase tracking-wider text-white hover:bg-deep-red">Order</a>
       </div>

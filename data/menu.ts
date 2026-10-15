@@ -25,107 +25,102 @@ export type MenuItem = {
 
 export type MenuCategory = { id: string; label: string; items: MenuItem[] };
 
-/* ---------------------------------------------------- NORMAL MENU (plates) */
+/* ------------------------------------------------- ZINO'S PACKAGE (main) */
+/* Source: Zino's flyer + WhatsApp chat, 15 Oct 2026.
+   Jollof Rice with Chicken N3,000 (flyer). With Turkey N6,000 (Zino in chat,
+   overrides the flyer's N5,000). Extras are the flyer's EXTRAS list.
+   Zino does NOT sell fish or beef with jollof. */
 
 export const ZINO: MenuCategory[] = [
   {
-    id: "jollof",
-    label: "Jollof Rice",
+    id: "package",
+    label: "Zino's Package",
     items: [
-      {
-        name: "Jollof Rice",
-        desc: "Smoky jollof rice",
-        sizes: [
-          { label: "Small Plate", price: 2500 },
-          { label: "Big Plate", price: 4000 },
-        ],
-      },
+      { name: "Jollof Rice & Chicken", price: 3000 },
+      { name: "Jollof Rice & Turkey", price: 6000 },
+    ],
+  },
+  {
+    id: "extras",
+    label: "Extras",
+    items: [
+      { name: "Jollof Rice", price: 700 },
+      { name: "Coleslaw", price: 600 },
+      { name: "Chicken", price: 1900 },
+      { name: "Plantain", price: 600 },
+      { name: "Turkey", price: 3800 },
     ],
   },
 ];
 
 /* ------------------------------------------------------ FOOD BY THE LITRE */
-/* Separate from the plates, like BQ's platters/packages. Bulk food sold per
-   litre, ordered during the week and cooked on Saturday. */
-
-const L = (l1: number, l2: number, l3: number, l5: number) => [
-  { label: "1 Litre", price: l1 },
-  { label: "2 Litres", price: l2 },
-  { label: "3 Litres", price: l3 },
-  { label: "5 Litres", price: l5 },
-];
+/* Separate from the package. No prices confirmed yet, so none are shown:
+   each card asks on WhatsApp. Add `sizes` here when Zino sends them. */
 
 export const LITRES: MenuItem[] = [
-  { name: "Jollof Rice", sizes: L(4000, 7500, 11000, 18000) },
-  { name: "Fried Rice", sizes: L(4500, 8500, 12500, 20000) },
-  { name: "Stew", sizes: L(5000, 9500, 14000, 22000) },
-  { name: "Beans", sizes: L(3500, 6500, 9500, 15000) },
-  { name: "Amala", sizes: L(3000, 5500, 8000, 13000) },
-  { name: "Eba", sizes: L(2500, 4500, 6500, 10500) },
-  { name: "Fufu", sizes: L(3000, 5500, 8000, 13000) },
-  { name: "Iyan (Pounded Yam)", sizes: L(4000, 7500, 11000, 18000) },
+  { name: "Jollof Rice" },
+  { name: "Fried Rice" },
+  { name: "Stew" },
+  { name: "Beans" },
+  { name: "Amala" },
+  { name: "Eba" },
+  { name: "Fufu" },
+  { name: "Iyan (Pounded Yam)" },
 ];
-
-export const LITRE_IMAGES: Record<string, string | null> = {
-};
 
 export const LOCATIONS = {
   ilorin: [
     {
-      name: "Zino's Kitchen",
-      area: "Ilorin",
-      landmark: "Ilorin, Kwara", // TODO: pickup point
-      whatsapp: "2340000000000", // TODO: Zino's real number
-      display: "0000 000 0000",
+      name: "Zino's Cakes & Events",
+      area: "On campus",
+      landmark: "Morning delivery on weekends to all locations on campus",
+      whatsapp: "2348079060151",
+      display: "0807 906 0151",
     },
   ],
   lagos: [
     {
-      name: "Zino's Kitchen",
-      area: "Ilorin",
-      landmark: "Ilorin, Kwara",
-      whatsapp: "2340000000000",
-      display: "0000 000 0000",
+      name: "Zino's Cakes & Events",
+      area: "On campus",
+      landmark: "Morning delivery on weekends to all locations on campus",
+      whatsapp: "2348079060151",
+      display: "0807 906 0151",
     },
   ],
 } as const;
 
 export const MENUS: Record<City, MenuCategory[]> = { ilorin: ZINO, lagos: ZINO };
 
-export const TAGLINE = "Jollof Rice & Food by the Litre";
-export const INSTAGRAM = "https://instagram.com/"; // TODO: Zino's handle
+export const TAGLINE = "Jollof Rice with Chicken or Turkey";
+export const INSTAGRAM = "https://instagram.com/zinoscakes_and_event";
+export const INSTAGRAM_HANDLE = "@zinoscakes_and_event";
+/** Flyer wording, verbatim. */
+export const SCHEDULE = [
+  "Pre-order on Thursdays & Fridays",
+  "Morning delivery available on weekends to all locations on campus",
+] as const;
+export const DELIVERY_NOTE = "Delivery attracts additional charges";
 
 export const formatPrice = (n: number) => `N${n.toLocaleString("en-NG")}`;
 
-/* ------------------------------------------------- plate builder + Saturdays */
+/* -------------------------------------------------------- plate builder */
 
 export type Option = { id: string; name: string; price: number; img?: string };
 export const WHATSAPP = LOCATIONS.ilorin[0].whatsapp;
-export const CITY = "Ilorin";
-/** Orders close Friday 6pm for Saturday's cook. */
-export const CUTOFF = { weekday: 5, hour: 18 };
 
-/** Plate builder: small or big plate of jollof, then extras. Extras are never sold alone. */
-export const PLATES: Option[] = ZINO[0].items[0].sizes!.map((s) => ({ id: s.label, name: s.label, price: s.price }));
-export const PROTEINS: Option[] = [
-  { id: "none", name: "No protein", price: 0 },
-  { id: "chicken", name: "Chicken", price: 2500, img: "/crops/chicken.webp" },
-  { id: "fish", name: "Fish", price: 3000, img: "/crops/fish.webp" },
-  { id: "beef", name: "Beef", price: 2000 },
+const P = ZINO[0].items, E = ZINO[1].items;
+export const PACKS: Option[] = [
+  { id: "chicken", name: P[0].name, price: P[0].price!, img: "/zino/chicken.webp" },
+  { id: "turkey", name: P[1].name, price: P[1].price!, img: "/zino/turkey.webp" },
 ];
-export const SIDES: Option[] = [
-  { id: "plantain", name: "Plantain", price: 1000, img: "/crops/plantain.webp" },
-  { id: "coleslaw", name: "Coleslaw", price: 800, img: "/crops/coleslaw.webp" },
-];
+export const EXTRAS: Option[] = E.map((e) => ({ id: e.name.toLowerCase(), name: e.name, price: e.price! }));
 
-export function nextCookDay(now = new Date()): Date {
+/** Pre-order closes end of Friday; delivery is the weekend after. */
+export function nextDeliveryDay(now = new Date()): Date {
   const d = new Date(now);
   d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7));
-  const cutoff = new Date(d);
-  cutoff.setDate(d.getDate() - (6 - CUTOFF.weekday));
-  cutoff.setHours(CUTOFF.hour, 0, 0, 0);
-  if (now >= cutoff) d.setDate(d.getDate() + 7);
   d.setHours(0, 0, 0, 0);
+  if (now.getDay() === 6) d.setDate(d.getDate() + 7);
   return d;
 }
 export const fmtDay = (d: Date) => d.toLocaleDateString("en-NG", { weekday: "long", day: "numeric", month: "long" });

@@ -1,5 +1,4 @@
-import { LOCATIONS, ZINO } from "@/data/menu";
-import Locations from "../components/Locations";
+import { LOCATIONS, ZINO, INSTAGRAM } from "@/data/menu";
 import Closing from "../components/Closing";
 import Footer from "../components/Footer";
 import HeroOverlay from "../components/HeroOverlay";
@@ -9,17 +8,16 @@ import Packages from "../components/Packages";
 
 export default function Home() {
   const loc = LOCATIONS.ilorin[0];
-  const restaurant = { "@type": "Restaurant", name: "Zino's Kitchen", telephone: `+${loc.whatsapp}`, servesCuisine: "Nigerian", address: { "@type": "PostalAddress", addressLocality: "Ilorin", addressRegion: "Kwara" } };
-  const menu = { "@type": "Menu", name: "Zino's Kitchen Menu", hasMenuSection: ZINO.map((c) => ({ "@type": "MenuSection", name: c.label, hasMenuItem: c.items.map((i) => ({ "@type": "MenuItem", name: i.name, offers: i.price !== undefined ? { "@type": "Offer", price: i.price, priceCurrency: "NGN" } : undefined })) })) };
+  const restaurant = { "@type": "Restaurant", name: "Zino's Cakes & Events", telephone: `+${loc.whatsapp}`, servesCuisine: "Nigerian", sameAs: INSTAGRAM, address: { "@type": "PostalAddress", addressLocality: "Ilorin", addressRegion: "Kwara" } };
+  const menu = { "@type": "Menu", name: "Zino's Menu", hasMenuSection: ZINO.map((c) => ({ "@type": "MenuSection", name: c.label, hasMenuItem: c.items.map((i) => ({ "@type": "MenuItem", name: i.name, offers: i.price !== undefined ? { "@type": "Offer", price: i.price, priceCurrency: "NGN" } : undefined })) })) };
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@graph": [restaurant, menu] }) }} />
       <HeroOverlay />
-      <Section id="order" eyebrow="Small plate or big plate" title="BUILD YOUR PLATE" tone="paper">
+      <Section id="order" eyebrow="Pre-order Thursdays & Fridays" title="ZINO'S PACKAGE" tone="paper">
         <OrderForm />
       </Section>
       <Packages />
-      <Locations />
       <Closing />
       <Footer />
     </>

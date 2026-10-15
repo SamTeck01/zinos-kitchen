@@ -2,82 +2,48 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { PLATES, PROTEINS, SIDES, WHATSAPP, formatPrice, type Option } from "../data/menu";
+import { PACKS, EXTRAS, WHATSAPP, DELIVERY_NOTE, SCHEDULE, formatPrice, type Option } from "../data/menu";
 
 /**
- * Build-your-plate, as a modal wizard.
+ * Zino's Package builder, as a modal wizard.
  *
- *   Size → Protein → Sides → Your order → Details → WhatsApp
+ *   Pack (chicken / turkey) → Extras → Your order → Details → WhatsApp
  *
- * Anything on the site can open it with openPlateBuilder(). The 3D plate at the
- * top is a stack of Blender renders from one camera, so layers line up exactly.
+ * Anything on the site opens it with openPlateBuilder().
  */
 
 const OPEN_EVENT = "zk:open-plate";
 export const openPlateBuilder = () => window.dispatchEvent(new Event(OPEN_EVENT));
 
-type Plate = { size: string; protein: string; sides: string[]; qty: number };
+type Pack = { pack: string; extras: Record<string, number>; qty: number };
 const byId = (list: Option[], id: string) => list.find((o) => o.id === id)!;
-const plateTotal = (p: Plate) =>
-  byId(PLATES, p.size).price + byId(PROTEINS, p.protein).price + p.sides.reduce((s, id) => s + byId(SIDES, id).price, 0);
-const describe = (p: Plate) =>
-  [`${byId(PLATES, p.size).name} Jollof Rice`, p.protein !== "none" && byId(PROTEINS, p.protein).name, ...p.sides.map((id) => byId(SIDES, id).name)]
-    .filter(Boolean).join(" + ");
+const extrasTotal = (p: Pack) => Object.entries(p.extras).reduce((s, [id, n]) => s + byId(EXTRAS, id).price * n, 0);
+const packTotal = (p: Pack) => byId(PACKS, p.pack).price + extrasTotal(p);
+const extrasText = (p: Pack) =>
+  Object.entries(p.extras).filter(([, n]) => n > 0).map(([id, n]) => `${n > 1 ? `${n}× ` : ""}extra ${byId(EXTRAS, id).name}`);
+const describe = (p: Pack) => [byId(PACKS, p.pack).name, ...extrasText(p)].join(" + ");
 
-const FRESH: Plate = { size: "Big Plate", protein: "chicken", sides: ["plantain"], qty: 1 };
-const STEPS = ["Size", "Protein", "Sides", "Your order", "Details"] as const;
+const FRESH: Pack = { pack: "chicken", extras: {}, qty: 1 };
+const STEPS = ["Pack", "Extras", "Your order", "Details"] as const;
 
-/* ------------------------------------------------------------------ plate */
-function PlateStage({ plate }: { plate: Plate }) {
-  const extras = [plate.protein, ...plate.sides].filter((id) => id !== "none");
-  const sizes = "(max-width:640px) 80vw, 22rem";
+const X = () => <svg viewBox="0 0 20 20" className="size-5" fill="none" stroke="currentColor" strokeWidth="2"><path d="m5 5 10 10M15 5 5 15" /></svg>;
+
+function Stepper({ value, onChange, label }: { value: number; onChange: (n: number) => void; label: string }) {
   return (
-    <div aria-hidden="true" className="relative mx-auto aspect-square w-[min(72vw,19rem)]">
-      <Image src="/3d/plate.webp" alt="" fill sizes={sizes} className="object-contain" priority />
-      {PLATES.map((r) => (
-        <Image key={r.id} src={r.id === "Big Plate" ? "/3d/rice-big.webp" : "/3d/rice-small.webp"} alt="" fill sizes={sizes}
-          className={`plate-layer object-contain ${plate.size === r.id ? "is-on" : ""}`} />
-      ))}
-      {[...PROTEINS, ...SIDES].filter((o) => o.id !== "none").map((o) => (
-        <Image key={o.id} src={`/3d/${o.id}.webp`} alt="" fill sizes={sizes}
-          className={`plate-layer plate-drop object-contain ${extras.includes(o.id) ? "is-on" : ""}`} />
-      ))}
+    <div className="flex items-center">
+      <button type="button" aria-label={`Remove one ${label}`} onClick={() => onChange(Math.max(0, value - 1))} disabled={!value}
+        className="press size-11 rounded-full text-xl disabled:opacity-30">−</button>
+      <span className="w-6 text-center font-mono" aria-live="polite">{value}</span>
+      <button type="button" aria-label={`Add one ${label}`} onClick={() => onChange(value + 1)}
+        className="press size-11 rounded-full bg-bq-red text-xl text-white hover:bg-deep-red">+</button>
     </div>
   );
 }
 
-function Choice({ active, onClick, title, price, img, multi }: { active: boolean; onClick: () => void; title: string; price?: string; img?: string; multi?: boolean }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={`press flex min-h-16 w-full items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-[background-color,border-color] duration-150 ${
-        active ? "border-bq-red bg-white" : "border-transparent bg-white/60 hover:border-char/15"
-      }`}
-    >
-      {img && <Image src={img} alt="" width={44} height={44} className="size-11 shrink-0 rounded-full object-cover" />}
-      <span className="flex-1">
-        <span className="block font-display text-lg font-extrabold uppercase leading-tight">{title}</span>
-        {price && <span className="font-mono text-sm text-bq-red">{price}</span>}
-      </span>
-      <span
-        className={`flex size-6 shrink-0 items-center justify-center border-2 transition-colors duration-150 ${multi ? "rounded-md" : "rounded-full"} ${
-          active ? "border-bq-red bg-bq-red text-white" : "border-char/25"
-        }`}
-      >
-        {active && <svg viewBox="0 0 12 12" className="size-3" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 6.5 5 9l5-6" /></svg>}
-      </span>
-    </button>
-  );
-}
-
-const X = () => <svg viewBox="0 0 20 20" className="size-5" fill="none" stroke="currentColor" strokeWidth="2"><path d="m5 5 10 10M15 5 5 15" /></svg>;
-
 /* ------------------------------------------------------------------ main */
 export default function OrderForm() {
-  const [plate, setPlate] = useState<Plate>(FRESH);
-  const [cart, setCart] = useState<Plate[]>([]);
+  const [cur, setCur] = useState<Pack>(FRESH);
+  const [cart, setCart] = useState<Pack[]>([]);
   const [form, setForm] = useState({ name: "", phone: "", mode: "Delivery", address: "", note: "" });
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
@@ -88,7 +54,10 @@ export default function OrderForm() {
   const bodyRef = useRef<HTMLDivElement>(null);
 
   const go = (to: number) => { setDir(to >= step ? 1 : -1); setStep(to); bodyRef.current?.scrollTo({ top: 0 }); };
-  const show = useCallback((at = 0) => { setStep(at); setDir(1); setOpen(true); }, []);
+  const show = useCallback((at = 0, pack?: string) => {
+    if (pack) setCur({ ...FRESH, pack });
+    setStep(at); setDir(1); setOpen(true);
+  }, []);
   const close = () => { setClosing(true); window.setTimeout(() => { setOpen(false); setClosing(false); }, 200); };
 
   useEffect(() => {
@@ -107,74 +76,85 @@ export default function OrderForm() {
     return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", onKey); };
   }, [open]);
 
-  const unit = plateTotal(plate);
-  const total = useMemo(() => cart.reduce((s, p) => s + plateTotal(p) * p.qty, 0), [cart]);
+  const unit = packTotal(cur);
+  const total = useMemo(() => cart.reduce((s, p) => s + packTotal(p) * p.qty, 0), [cart]);
   const count = cart.reduce((n, p) => n + p.qty, 0);
-  const toggleSide = (id: string) =>
-    setPlate((p) => ({ ...p, sides: p.sides.includes(id) ? p.sides.filter((s) => s !== id) : [...p.sides, id] }));
-  const addPlate = () => { setCart((c) => [...c, plate]); setPlate(FRESH); setPulse((n) => n + 1); go(3); };
+  const setExtra = (id: string, n: number) => setCur((p) => ({ ...p, extras: { ...p.extras, [id]: n } }));
+  const addPack = () => { setCart((c) => [...c, cur]); setCur(FRESH); setPulse((n) => n + 1); go(2); };
   const remove = (i: number) => setCart((c) => c.filter((_, j) => j !== i));
   const detailsOk = Boolean(form.name.trim() && form.phone.trim() && (form.mode === "Pickup" || form.address.trim()));
 
   const send = () => {
     if (!detailsOk || !cart.length) return;
     const msg = [
-      `Hi Zino's Kitchen, I'd like to order:`, "",
-      ...cart.map((p) => `• ${p.qty} × ${describe(p)} — ${formatPrice(plateTotal(p) * p.qty)}`), "",
-      `Total: ${formatPrice(total)}`,
+      `Hi Zino's, I'd like to pre-order:`, "",
+      ...cart.map((p) => `• ${p.qty} × ${describe(p)} — ${formatPrice(packTotal(p) * p.qty)}`), "",
+      `Total: ${formatPrice(total)}${form.mode === "Delivery" ? " (+ delivery)" : ""}`,
       `Name: ${form.name}`, `Phone: ${form.phone}`,
-      form.mode === "Delivery" ? `Delivery: ${form.address}` : "Pickup",
+      form.mode === "Delivery" ? `Delivery to: ${form.address}` : "Pickup",
       form.note && `Note: ${form.note}`,
     ].filter(Boolean).join("\n");
     window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
   };
 
-  const input = "mt-1 w-full min-h-12 rounded-xl border border-char/15 bg-white px-3 text-base outline-none transition-[border-color] duration-150 focus:border-bq-red";
-  const building = step <= 2;
-
   const runAction = () => {
     if (step === 0) go(1);
-    else if (step === 1) go(2);
-    else if (step === 2) addPlate();
-    else if (step === 3) go(4);
+    else if (step === 1) addPack();
+    else if (step === 2) go(3);
     else send();
   };
   const action = [
-    { label: "Next: protein", price: unit, disabled: false },
-    { label: "Next: sides", price: unit, disabled: false },
-    { label: plate.qty > 1 ? `Add ${plate.qty} plates` : "Add to order", price: unit * plate.qty, disabled: false },
+    { label: "Next: extras", price: unit, disabled: false },
+    { label: cur.qty > 1 ? `Add ${cur.qty} packs` : "Add to order", price: unit * cur.qty, disabled: false },
     { label: "Checkout", price: total, disabled: !cart.length },
     { label: "Send on WhatsApp", price: total, disabled: !detailsOk },
   ][step];
 
+  const input = "mt-1 w-full min-h-12 rounded-xl border border-char/15 bg-white px-3 text-base outline-none transition-[border-color] duration-150 focus:border-bq-red";
+
   return (
     <>
-      {/* ---------- teaser on the page ---------- */}
-      <div className="grid items-center gap-8 sm:grid-cols-2">
-        <button type="button" onClick={() => show(0)} className="press" aria-label="Build your plate">
-          <PlateStage plate={plate} />
-        </button>
-        <div>
-          <ol className="space-y-3">
-            {["Pick a small or big plate", "Add chicken, fish or beef", "Add plantain or coleslaw", "Send it to Zino on WhatsApp"].map((t, i) => (
-              <li key={t} className="flex items-center gap-3">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-blush font-mono text-sm text-bq-red">{i + 1}</span>
-                <span>{t}</span>
-              </li>
-            ))}
-          </ol>
-          <button type="button" onClick={() => show(0)} className="press mt-7 inline-flex min-h-14 items-center gap-3 rounded-full bg-bq-red px-8 font-display text-lg font-extrabold uppercase text-white duration-150 hover:bg-deep-red">
-            Build your plate
-            <span className="font-mono text-sm font-normal opacity-80">from {formatPrice(PLATES[0].price)}</span>
+      {/* ---------- the package, on the page ---------- */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        {PACKS.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => show(0, p.id)}
+            className="press group relative aspect-[4/5] overflow-hidden rounded-3xl text-left"
+          >
+            <Image src={p.img!} alt={p.name} fill sizes="(max-width:640px) 100vw, 50vw" className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
+            <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-char/85 via-char/40 to-transparent p-5 pt-20">
+              <span>
+                <span className="block font-display text-2xl font-extrabold uppercase leading-none text-white sm:text-3xl">{p.name}</span>
+                <span className="mt-2 block font-mono text-lg text-gold">{formatPrice(p.price)}</span>
+              </span>
+              <span className="flex min-h-11 shrink-0 items-center rounded-full bg-bq-red px-5 font-display font-extrabold uppercase text-white">Order</span>
+            </span>
           </button>
-        </div>
+        ))}
+      </div>
+
+      <div className="mt-6 rounded-3xl bg-blush p-5 sm:p-6">
+        <p className="font-display text-xl font-extrabold uppercase">Extras</p>
+        <ul className="mt-2 grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-5">
+          {EXTRAS.map((e) => (
+            <li key={e.id} className="flex items-baseline justify-between border-b border-char/10 py-2">
+              <span>{e.name}</span><span className="font-mono text-bq-red">{formatPrice(e.price)}</span>
+            </li>
+          ))}
+        </ul>
+        <ul className="mt-4 space-y-1 font-mono text-xs uppercase tracking-wider text-char/70">
+          {SCHEDULE.map((s) => <li key={s}>{s}</li>)}
+          <li className="text-deep-red">Note: {DELIVERY_NOTE}</li>
+        </ul>
       </div>
 
       {/* ---------- cart pill ---------- */}
       {count > 0 && !open && (
         <button
           type="button"
-          onClick={() => show(3)}
+          onClick={() => show(2)}
           className="cart-pill press fixed inset-x-4 bottom-[calc(env(safe-area-inset-bottom)+0.85rem)] z-[55] mx-auto flex min-h-14 max-w-md items-center justify-between rounded-full bg-char px-6 text-white shadow-[0_16px_36px_-12px_rgba(20,16,14,0.6)] hover:bg-deep-red"
         >
           <span className="flex items-center gap-3">
@@ -215,78 +195,88 @@ export default function OrderForm() {
             <div ref={bodyRef} className="flex-1 overflow-y-auto px-5 pb-4 sm:px-7">
               <p className="mt-1 font-mono text-xs uppercase tracking-[0.18em] text-bq-red">Step {step + 1} of {STEPS.length}</p>
               <h2 id="pb-title" className="font-display text-3xl font-extrabold uppercase leading-none">
-                {["Pick your plate", "Add protein", "Add sides", "Your order", "Your details"][step]}
+                {["Pick your pack", "Add extras", "Your order", "Your details"][step]}
               </h2>
-
-              {building && (
-                <div className="relative mt-2">
-                  <PlateStage plate={plate} />
-                  <span key={unit} className="price-tick absolute bottom-3 right-0 rounded-full bg-char px-4 py-2 font-mono text-sm text-white shadow-lg">{formatPrice(unit)}</span>
-                </div>
-              )}
 
               <div key={step} className={dir > 0 ? "step-in-right" : "step-in-left"}>
                 {step === 0 && (
-                  <div className="mt-3 grid gap-2">
-                    {PLATES.map((r) => (
-                      <Choice key={r.id} active={plate.size === r.id} onClick={() => setPlate({ ...plate, size: r.id })} title={`${r.name} Jollof`} price={formatPrice(r.price)} />
-                    ))}
+                  <div className="mt-4 grid grid-cols-2 gap-3">
+                    {PACKS.map((p) => {
+                      const on = cur.pack === p.id;
+                      return (
+                        <button key={p.id} type="button" aria-pressed={on} onClick={() => setCur({ ...cur, pack: p.id })}
+                          className={`press overflow-hidden rounded-2xl border-2 bg-white text-left transition-[border-color] duration-150 ${on ? "border-bq-red" : "border-transparent"}`}>
+                          <span className="relative block aspect-[4/5]">
+                            <Image src={p.img!} alt="" fill sizes="(max-width:640px) 45vw, 14rem" className="object-cover" />
+                            <span className={`absolute right-2 top-2 flex size-7 items-center justify-center rounded-full border-2 transition-colors duration-150 ${on ? "border-bq-red bg-bq-red text-white" : "border-white bg-char/30"}`}>
+                              {on && <svg viewBox="0 0 12 12" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 6.5 5 9l5-6" /></svg>}
+                            </span>
+                          </span>
+                          <span className="block p-3">
+                            <span className="block font-display font-extrabold uppercase leading-tight">{p.name}</span>
+                            <span className="font-mono text-sm text-bq-red">{formatPrice(p.price)}</span>
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
                 {step === 1 && (
-                  <div className="mt-3 grid gap-2">
-                    {PROTEINS.map((p) => (
-                      <Choice key={p.id} active={plate.protein === p.id} onClick={() => setPlate({ ...plate, protein: p.id })} title={p.name} img={p.img} price={p.price ? `+${formatPrice(p.price)}` : undefined} />
-                    ))}
-                  </div>
-                )}
-                {step === 2 && (
                   <>
-                    <div className="mt-3 grid gap-2">
-                      {SIDES.map((s) => (
-                        <Choice key={s.id} multi active={plate.sides.includes(s.id)} onClick={() => toggleSide(s.id)} title={s.name} img={s.img} price={`+${formatPrice(s.price)}`} />
+                    <p className="mt-1 text-sm text-char/70">Optional. Add as many as you like to this pack.</p>
+                    <ul className="mt-3 divide-y divide-char/10 rounded-2xl bg-white px-4">
+                      {EXTRAS.map((e) => (
+                        <li key={e.id} className="flex items-center justify-between gap-3 py-2">
+                          <span>
+                            <span className="block font-display text-lg font-extrabold uppercase leading-tight">{e.name}</span>
+                            <span className="font-mono text-sm text-bq-red">+{formatPrice(e.price)}</span>
+                          </span>
+                          <Stepper value={cur.extras[e.id] ?? 0} onChange={(n) => setExtra(e.id, n)} label={e.name} />
+                        </li>
                       ))}
-                    </div>
-                    <div className="mt-4 flex items-center justify-between rounded-2xl bg-white/60 px-4 py-1">
-                      <span className="font-display text-lg font-extrabold uppercase">How many plates?</span>
+                    </ul>
+                    <div className="mt-3 flex items-center justify-between rounded-2xl bg-blush px-4 py-1">
+                      <span className="font-display text-lg font-extrabold uppercase">How many packs?</span>
                       <div className="flex items-center">
-                        <button type="button" aria-label="One fewer" onClick={() => setPlate({ ...plate, qty: Math.max(1, plate.qty - 1) })} className="press size-11 rounded-full text-xl">−</button>
-                        <span className="w-6 text-center font-mono" aria-live="polite">{plate.qty}</span>
-                        <button type="button" aria-label="One more" onClick={() => setPlate({ ...plate, qty: plate.qty + 1 })} className="press size-11 rounded-full text-xl">+</button>
+                        <button type="button" aria-label="One fewer pack" onClick={() => setCur({ ...cur, qty: Math.max(1, cur.qty - 1) })} className="press size-11 rounded-full text-xl">−</button>
+                        <span className="w-6 text-center font-mono" aria-live="polite">{cur.qty}</span>
+                        <button type="button" aria-label="One more pack" onClick={() => setCur({ ...cur, qty: cur.qty + 1 })} className="press size-11 rounded-full text-xl">+</button>
                       </div>
                     </div>
                   </>
                 )}
-                {step === 3 && (
+                {step === 2 && (
                   <div className="mt-4">
                     {cart.length === 0 ? (
                       <p className="rounded-2xl border border-dashed border-char/20 p-5 text-char/70">Your order is empty.</p>
                     ) : (
                       <ul className="space-y-2">
                         {cart.map((p, i) => (
-                          <li key={i} className="cart-row flex items-start justify-between gap-3 rounded-2xl bg-white p-4">
-                            <span>
-                              <span className="block font-display font-extrabold uppercase leading-tight">{p.qty} × {byId(PLATES, p.size).name}</span>
-                              <span className="text-sm text-char/70">{describe(p)}</span>
+                          <li key={i} className="cart-row flex items-center gap-3 rounded-2xl bg-white p-3">
+                            <span className="relative size-14 shrink-0 overflow-hidden rounded-xl">
+                              <Image src={byId(PACKS, p.pack).img!} alt="" fill sizes="56px" className="object-cover" />
                             </span>
-                            <span className="flex shrink-0 items-center gap-1">
-                              <span className="font-mono">{formatPrice(plateTotal(p) * p.qty)}</span>
-                              <button type="button" aria-label={`Remove ${describe(p)}`} onClick={() => remove(i)} className="press -my-2 -mr-2 flex size-11 items-center justify-center rounded-full text-char/50 hover:text-bq-red"><X /></button>
+                            <span className="min-w-0 flex-1">
+                              <span className="block font-display font-extrabold uppercase leading-tight">{p.qty} × {byId(PACKS, p.pack).name}</span>
+                              {extrasText(p).length > 0 && <span className="text-sm text-char/70">+ {extrasText(p).join(", ")}</span>}
                             </span>
+                            <span className="font-mono">{formatPrice(packTotal(p) * p.qty)}</span>
+                            <button type="button" aria-label={`Remove ${describe(p)}`} onClick={() => remove(i)} className="press -mr-1 flex size-11 shrink-0 items-center justify-center rounded-full text-char/50 hover:text-bq-red"><X /></button>
                           </li>
                         ))}
                       </ul>
                     )}
-                    <button type="button" onClick={() => go(0)} className="press mt-3 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-bq-red/40 font-display text-lg font-extrabold uppercase text-bq-red hover:border-bq-red">
-                      + Add another plate
+                    <button type="button" onClick={() => go(0)} className="press mt-3 flex min-h-14 w-full items-center justify-center rounded-2xl border-2 border-dashed border-bq-red/40 font-display text-lg font-extrabold uppercase text-bq-red hover:border-bq-red">
+                      + Add another pack
                     </button>
                     <div className="mt-5 flex items-baseline justify-between border-t border-char/15 pt-3">
                       <span className="font-display font-extrabold uppercase">Total</span>
                       <span className="font-mono text-2xl text-bq-red">{formatPrice(total)}</span>
                     </div>
+                    <p className="mt-1 text-right text-xs text-char/70">{DELIVERY_NOTE}.</p>
                   </div>
                 )}
-                {step === 4 && (
+                {step === 3 && (
                   <div className="mt-4 space-y-3 text-sm">
                     <label className="block">Name<input className={input} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoComplete="name" /></label>
                     <label className="block">Phone<input className={input} type="tel" inputMode="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} autoComplete="tel" /></label>
@@ -298,7 +288,12 @@ export default function OrderForm() {
                         </label>
                       ))}
                     </fieldset>
-                    {form.mode === "Delivery" && <label className="block">Delivery address<input className={input} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} autoComplete="street-address" /></label>}
+                    {form.mode === "Delivery" && (
+                      <>
+                        <label className="block">Where on campus?<input className={input} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Hostel / hall and room" autoComplete="street-address" /></label>
+                        <p className="text-xs text-deep-red">{DELIVERY_NOTE}. Morning delivery on weekends.</p>
+                      </>
+                    )}
                     <label className="block">Note (optional)<input className={input} value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} /></label>
                     <p className="pt-1 text-xs text-char/70">WhatsApp opens with your order written out. Just press send.</p>
                   </div>
@@ -316,7 +311,7 @@ export default function OrderForm() {
                 <span>{action.label}</span>
                 <span key={action.price} className="price-tick font-mono text-base font-normal">{formatPrice(action.price)}</span>
               </button>
-              {step === 4 && !detailsOk && <p className="mt-2 text-center text-xs text-char/70">Fill in your name, phone{form.mode === "Delivery" ? " and address" : ""}.</p>}
+              {step === 3 && !detailsOk && <p className="mt-2 text-center text-xs text-char/70">Fill in your name, phone{form.mode === "Delivery" ? " and where on campus" : ""}.</p>}
             </div>
           </div>
         </div>,

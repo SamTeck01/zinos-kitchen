@@ -7,7 +7,7 @@ export default function Locations() {
   const { locations } = useCity();
 
   return (
-    <Section id="locations" eyebrow="Pickup & delivery" title="WHERE TO FIND ZINO" tone="paper">
+    <Section id="locations" eyebrow="Delivery" title="WEEKEND DELIVERY ON CAMPUS" tone="paper">
       <div className="grid gap-4 sm:grid-cols-2">
         {locations.map((location) => (
           <div key={location.name} className="bg-blush p-5">
