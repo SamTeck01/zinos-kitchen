@@ -53,9 +53,24 @@ body:has([role="dialog"]) .floating-order-bar {
   }
 }
 
-@keyframes steam { 0%,100% { transform: translateY(0); opacity: .35 } 50% { transform: translateY(-8px); opacity: .1 } }
-@keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
-@media (prefers-reduced-motion: no-preference) {
-  .steam { animation: steam 2.4s ease-in-out infinite; }
-  .bob { animation: bob 4s ease-in-out infinite; }
+
+:root { --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
+::selection { background: #E52401; color: #fff; }
+input { caret-color: #E52401; }
+
+.press { transition-property: transform, background-color, border-color, color, opacity; transition-timing-function: var(--ease-out); }
+.press:active:not(:disabled) { transform: scale(0.97); }
+
+/* Plate: extras pop onto the plate from slightly smaller, never from nothing. */
+.plate-item { opacity: 0; scale: 0.82; transition: opacity 220ms var(--ease-out), scale 260ms var(--ease-out); }
+.plate-item.is-on { opacity: 1; scale: 1; }
+.plate-rice { transition: inset 260ms var(--ease-out); }
+
+@keyframes tick { from { opacity: 0; transform: translateY(6px); filter: blur(2px) } }
+.price-tick { animation: tick 200ms var(--ease-out); }
+.cart-row:last-child { animation: tick 240ms var(--ease-out); }
+
+@media (prefers-reduced-motion: reduce) {
+  .plate-item, .plate-rice { transition: opacity 150ms ease; scale: 1; }
+  .price-tick, .cart-row:last-child { animation: none; }
 }
