@@ -18,7 +18,7 @@ Differences from BQ:
 - Photos are Zino's own (`public/zino/`). Never use stock or 3D/cartoon food.
 - One city (Ilorin). There is no city switch. `City` keeps both keys only so
   BQ's city-aware components type-check; both point to the same data.
-- The hero is a looping video (`components/HeroVideo.tsx`), not scroll frames.
+- The hero is a still photo of Zino's food (`public/zino/hero.webp`). No video.
   `ScrollFramesHero.tsx` is not used.
 - Builder: `components/OrderForm.tsx` (pack → extras → order → details →
   WhatsApp).

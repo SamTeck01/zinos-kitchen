@@ -1,6 +1,6 @@
 "use client";
 import OrderButton from "./OrderButton";
-import HeroVideo from "./HeroVideo";
+import Image from "next/image";
 import CookDay from "./CookDay";
 import { useCity } from "../data/cityContext";
 
@@ -9,8 +9,7 @@ import { useCity } from "../data/cityContext";
  * above/below it on mobile and beside it on desktop, order pill under the food,
  * motto and phone number in the side margins on desktop.
  *
- * Zino's food is a looping video, not scroll-scrubbed frames. The video is a
- * rounded square, so the food box is just its width.
+ * Zino's food is a still photo of his own packs.
  */
 export default function HeroOverlay() {
   const { locations } = useCity();
@@ -30,7 +29,7 @@ export default function HeroOverlay() {
         <div className="order-2 w-full max-w-[min(80vw,52vh)] lg:w-[min(36vw,58vh)] lg:max-w-none">
           <p className="mb-2 text-right font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red md:text-xs">Pre-order Thursdays & Fridays</p>
           <div className="overflow-hidden rounded-[2rem] shadow-[0_30px_60px_-24px_rgba(165,6,2,0.5)]">
-            <HeroVideo />
+            <div className="relative aspect-[3/4] w-full"><Image src="/zino/hero.webp" alt="Zino's jollof rice with chicken and turkey, plantain and coleslaw" fill priority sizes="(max-width:1024px) 80vw, 36vw" className="object-cover" /></div>
           </div>
           <p className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red md:text-xs">Weekend morning delivery on campus</p>
         </div>
