@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid #e52401;
+  outline-offset: 3px;
+}
+
+body:has([role="dialog"]) .floating-order-bar {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(1.5rem);
+}
+
+/*
+ * Modal entrance. Both ItemModal and OrderButton's channel sheet reference these
+ * by name; without them the sheets appeared instantly with no transition, which
+ * is what was happening — the animation names were being used before they existed.
+ *
+ * transform and opacity only, so they run on the compositor.
+ */
+@keyframes bqFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bqRise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Anyone who asked not to be moved gets the sheet without the slide. */
+@media (prefers-reduced-motion: reduce) {
+  [style*="bqRise"],
+  [style*="bqFade"] {
+    animation: none !important;
+  }
+}
+
+@keyframes steam { 0%,100% { transform: translateY(0); opacity: .35 } 50% { transform: translateY(-8px); opacity: .1 } }
+@keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+@media (prefers-reduced-motion: no-preference) {
+  .steam { animation: steam 2.4s ease-in-out infinite; }
+  .bob { animation: bob 4s ease-in-out infinite; }
+}
