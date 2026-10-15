@@ -94,10 +94,23 @@ body:has(.cart-pill) .floating-order-bar { opacity: 0; pointer-events: none; }
 @media (min-width: 640px) { [data-state="closing"] .sheet { transform: scale(0.96); opacity: 0; } }
 
 /* Contents of the sheet settle in just after it lands. */
-.sheet > * { animation: tick 360ms var(--ease-out) both; }
-.sheet > *:nth-child(2) { animation-delay: 60ms; }
+
+
 
 @media (prefers-reduced-motion: reduce) {
   .sheet, [data-state="closing"] .sheet { transform: none !important; transition: opacity 150ms ease; }
   .cart-pill, .cart-bump, .sheet > * { animation: none; }
 }
+
+/* 3D plate layers: rice crossfades, extras drop onto the plate. */
+.plate-layer { opacity: 0; transition: opacity 240ms var(--ease-out), transform 360ms cubic-bezier(0.34, 1.4, 0.64, 1); }
+.plate-drop { transform: translateY(-7%) scale(1.04); }
+.plate-layer.is-on { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .plate-layer, .plate-drop { transform: none; transition: opacity 150ms ease; } }
+
+/* Wizard steps slide in from the direction you're travelling. */
+@keyframes stepR { from { opacity: 0; transform: translateX(24px); } }
+@keyframes stepL { from { opacity: 0; transform: translateX(-24px); } }
+.step-in-right { animation: stepR 280ms var(--ease-out); }
+.step-in-left { animation: stepL 280ms var(--ease-out); }
+@media (prefers-reduced-motion: reduce) { .step-in-right, .step-in-left { animation: none; } }

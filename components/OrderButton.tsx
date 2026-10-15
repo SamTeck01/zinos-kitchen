@@ -30,6 +30,7 @@ import Image from "next/image";
 import { createPortal } from "react-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCity } from "../data/cityContext";
+import { openPlateBuilder } from "./OrderForm";
 
 /* --------------------------------------------------------------------- logo */
 
@@ -220,7 +221,7 @@ export default function OrderButton({
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={openPlateBuilder}
         aria-haspopup="dialog"
         className={`inline-flex items-center rounded-full bg-bq-red font-display uppercase tracking-wide text-white transition-transform active:scale-[0.97] ${shape} ${className}`}
       >
