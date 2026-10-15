@@ -14,7 +14,7 @@ export default function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@graph": [restaurant, menu] }) }} />
       <HeroOverlay />
-      <Section id="order" eyebrow="Pre-order Thursdays & Fridays" title="ZINO'S PACKAGE" tone="paper">
+      <Section id="order" eyebrow="The menu · Pre-order Thursdays & Fridays" title="ZINO'S WEEKEND PACKAGE" tone="paper">
         <OrderForm />
       </Section>
       <Packages />

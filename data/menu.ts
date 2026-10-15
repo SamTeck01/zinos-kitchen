@@ -61,6 +61,7 @@ export const LITRES: MenuItem[] = [
   { name: "Jollof Rice" },
   { name: "Fried Rice" },
   { name: "Stew" },
+  { name: "Soup" },
   { name: "Beans" },
   { name: "Amala" },
   { name: "Eba" },

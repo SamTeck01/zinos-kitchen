@@ -18,11 +18,11 @@ export default function HeroOverlay() {
       <div className="mx-auto flex min-h-[calc(100svh-4rem)] max-w-7xl flex-col items-center justify-center px-5 py-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-10 lg:px-12">
         {/* left margin on desktop: motto */}
         <h1 className="order-3 mt-6 text-center font-display text-3xl font-extrabold uppercase leading-[0.95] text-char lg:order-1 lg:mt-0 lg:text-left lg:text-5xl">
-          Jollof rice
+          Get your
           <br />
-          <span className="text-bq-red">with chicken</span>
+          <span className="text-bq-red">tasty jollof rice</span>
           <br />
-          <span className="text-bq-red">or turkey</span>
+          <span className="text-xl lg:text-2xl">Available every weekend</span>
         </h1>
 
         {/* the food */}

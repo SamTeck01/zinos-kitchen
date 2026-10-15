@@ -18,9 +18,9 @@ export default function Packages() {
       <div className="mx-auto max-w-7xl px-5 pt-16 sm:px-8 lg:px-12">
         <div className="grid items-end gap-6 sm:grid-cols-[1fr_auto]">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.18em] text-bq-red">For parties, families, events</p>
-            <h2 className="mt-3 font-display text-3xl uppercase text-char sm:text-5xl">FOOD BY THE LITRE</h2>
-            <p className="mt-3 max-w-md text-char/70">Big orders by the litre. Tap a food to ask Zino on WhatsApp.</p>
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-bq-red">Introducing</p>
+            <h2 className="mt-3 font-display text-3xl uppercase text-char sm:text-5xl">SOUP &amp; FOOD BY THE LITRE</h2>
+            <p className="mt-3 max-w-md text-char/70">A different thing from the weekend package. Tap a food to ask Zino on WhatsApp.</p>
           </div>
           <div className="relative hidden aspect-[4/5] w-40 overflow-hidden rounded-2xl sm:block">
             <Image src="/zino/packs.webp" alt="Packs of Zino's food" fill sizes="10rem" className="object-cover" />
