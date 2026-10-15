@@ -1,0 +1,3 @@
+import type { ReactNode } from "react";
+type SectionProps = { id: string; eyebrow: string; title: string; children: ReactNode; tone?: "paper" | "blush" };
+export default function Section({ id, eyebrow, title, children, tone = "paper" }: SectionProps) { return <section id={id} className={tone === "blush" ? "bg-blush" : "bg-paper"}><div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"><p className="font-mono text-xs uppercase tracking-[0.18em] text-bq-red">{eyebrow}</p><h2 className="mt-3 font-display text-3xl uppercase text-char sm:text-4xl lg:text-5xl">{title}</h2><div className="mt-8">{children}</div></div></section>; }

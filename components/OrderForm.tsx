@@ -37,7 +37,7 @@ function Chip({ active, onClick, children, label }: { active: boolean; onClick: 
 }
 
 export default function OrderForm() {
-  const [plate, setPlate] = useState<Plate>({ rice: "2l", protein: "chicken", sides: ["plantain"], qty: 1 });
+  const [plate, setPlate] = useState<Plate>({ rice: "2 Litres", protein: "chicken", sides: ["plantain"], qty: 1 });
   const [cart, setCart] = useState<Plate[]>([]);
   const [cookDay, setCookDay] = useState("this Saturday");
   const [form, setForm] = useState({ name: "", phone: "", mode: "Delivery", address: "", note: "" });
@@ -80,7 +80,7 @@ export default function OrderForm() {
             <div
               key={plate.rice}
               className="plate-rice absolute overflow-hidden rounded-[46%_54%_50%_50%/52%_48%_52%_48%]"
-              style={{ inset: `${({ "1l": 26, "2l": 21, "3l": 17, "5l": 13 } as Record<string, number>)[plate.rice]}%` }}
+              style={{ inset: `${({ "1 Litre": 26, "2 Litres": 21, "3 Litres": 17, "5 Litres": 13 } as Record<string, number>)[plate.rice]}%` }}
             >
               <Image src="/crops/rice.webp" alt="" fill sizes="300px" className="object-cover" />
             </div>
