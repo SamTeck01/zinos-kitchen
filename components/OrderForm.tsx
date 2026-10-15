@@ -114,24 +114,24 @@ export default function OrderForm() {
 
   return (
     <>
-      {/* ---------- the package, on the page ---------- */}
-      <ul className="space-y-3">
+      {/* ---------- the package, on the page: BQ's image cards ---------- */}
+      <ul className="grid grid-cols-2 gap-3 sm:gap-4">
         {PACKS.map((p) => (
           <li key={p.id}>
             <button
               type="button"
               onClick={() => show(0, p.id)}
-              className="press flex w-full items-center gap-4 rounded-3xl bg-white p-2.5 pr-4 text-left shadow-[0_8px_24px_-16px_rgba(20,16,14,0.35)]"
+              className="press relative block aspect-[3/4] w-full overflow-hidden rounded-2xl border border-char/10 text-left"
             >
-              <span className="relative size-24 shrink-0 overflow-hidden rounded-2xl sm:size-32">
-                <Image src={p.img!} alt={p.name} fill sizes="8rem" className="object-cover" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block font-display text-xl font-extrabold uppercase leading-[1.05] sm:text-2xl">{p.name}</span>
-                <span className="mt-1 block font-mono text-lg text-bq-red">{formatPrice(p.price)}</span>
-              </span>
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-bq-red text-white" aria-hidden="true">
-                <svg viewBox="0 0 20 20" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M10 4v12M4 10h12" /></svg>
+              <Image src={p.img!} alt={p.name} fill sizes="(max-width:640px) 50vw, 24rem" className="object-cover" />
+              <span className="absolute inset-x-0 bottom-0 border-t border-paper/40 bg-paper/80 p-3 backdrop-blur-sm">
+                <span className="block font-display text-sm font-extrabold uppercase leading-tight text-char sm:text-base">{p.name}</span>
+                <span className="mt-1 flex items-center justify-between">
+                  <span className="font-mono text-sm text-bq-red">{formatPrice(p.price)}</span>
+                  <span className="flex size-8 items-center justify-center rounded-full bg-bq-red text-white" aria-hidden="true">
+                    <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M10 4v12M4 10h12" /></svg>
+                  </span>
+                </span>
               </span>
             </button>
           </li>
