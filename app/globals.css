@@ -74,3 +74,30 @@ input { caret-color: #E52401; }
   .plate-item, .plate-rice { transition: opacity 150ms ease; scale: 1; }
   .price-tick, .cart-row:last-child { animation: none; }
 }
+
+/* ------------------------------------------------ cart pill + order sheet */
+body:has(.cart-pill) .floating-order-bar { opacity: 0; pointer-events: none; }
+@keyframes pillIn { from { opacity: 0; transform: translateY(24px) scale(0.96); } }
+.cart-pill { animation: pillIn 320ms var(--ease-out); }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.cart-bump { animation: bump 300ms var(--ease-out); }
+
+/* Sheet rises from the bottom on phones, scales in on desktop. Exit is faster than enter. */
+.sheet { transition: transform 420ms cubic-bezier(0.32, 0.72, 0, 1), opacity 300ms var(--ease-out); }
+.sheet-backdrop { transition: opacity 300ms ease; }
+@starting-style { .sheet { transform: translateY(100%); } .sheet-backdrop { opacity: 0; } }
+@media (min-width: 640px) {
+  @starting-style { .sheet { transform: translateY(16px) scale(0.96); opacity: 0; } }
+}
+[data-state="closing"] .sheet { transform: translateY(100%); transition-duration: 200ms; transition-timing-function: ease-in; }
+[data-state="closing"] .sheet-backdrop { opacity: 0; transition-duration: 200ms; }
+@media (min-width: 640px) { [data-state="closing"] .sheet { transform: scale(0.96); opacity: 0; } }
+
+/* Contents of the sheet settle in just after it lands. */
+.sheet > * { animation: tick 360ms var(--ease-out) both; }
+.sheet > *:nth-child(2) { animation-delay: 60ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet, [data-state="closing"] .sheet { transform: none !important; transition: opacity 150ms ease; }
+  .cart-pill, .cart-bump, .sheet > * { animation: none; }
+}

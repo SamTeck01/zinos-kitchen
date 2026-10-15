@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { PLATES, PROTEINS, SIDES, WHATSAPP, formatPrice, type Option } from "../data/menu";
 
 type Plate = { size: string; protein: string; sides: string[]; qty: number };
@@ -41,12 +42,27 @@ export default function OrderForm() {
   const [cart, setCart] = useState<Plate[]>([]);
   const [form, setForm] = useState({ name: "", phone: "", mode: "Delivery", address: "", note: "" });
   const [pulse, setPulse] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const close = () => { setClosing(true); window.setTimeout(() => { setOpen(false); setClosing(false); }, 200); };
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    sheetRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", onKey); };
+  }, [open]);
+  const count = cart.reduce((n, p) => n + p.qty, 0);
 
   const unit = plateTotal(plate);
   const total = useMemo(() => cart.reduce((s, p) => s + plateTotal(p) * p.qty, 0), [cart]);
   const toggleSide = (id: string) =>
     setPlate((p) => ({ ...p, sides: p.sides.includes(id) ? p.sides.filter((s) => s !== id) : [...p.sides, id] }));
   const add = () => { setCart((c) => [...c, plate]); setPulse((n) => n + 1); };
+  const remove = (i: number) => setCart((c) => { const next = c.filter((_, j) => j !== i); if (!next.length) close(); return next; });
   const ready = cart.length > 0 && form.name.trim() && form.phone.trim() && (form.mode === "Pickup" || form.address.trim());
 
   const send = (e: React.FormEvent) => {
@@ -67,7 +83,7 @@ export default function OrderForm() {
   const input = "mt-1 w-full min-h-12 rounded-xl border border-char/15 bg-paper px-3 text-base outline-none transition-[border-color] duration-150 focus:border-bq-red";
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:gap-14">
+    <div className="mx-auto max-w-3xl">
       {/* ---------- builder ---------- */}
       <div>
         <div className="grid items-center gap-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -156,58 +172,93 @@ export default function OrderForm() {
             <button type="button" aria-label="One more" onClick={() => setPlate({ ...plate, qty: plate.qty + 1 })} className="press size-12 rounded-full text-xl">+</button>
           </div>
           <button type="button" onClick={add} className="press flex min-h-12 flex-1 items-center justify-between rounded-full bg-bq-red px-6 font-display text-lg font-extrabold uppercase text-white transition-[background-color] duration-150 hover:bg-deep-red">
-            <span>Add to order</span>
+            <span className="whitespace-nowrap">Add to order</span>
             <span className="font-mono text-base font-normal">{formatPrice(unit * plate.qty)}</span>
           </button>
         </div>
       </div>
 
-      {/* ---------- checkout ---------- */}
-      <form onSubmit={send} className="h-fit rounded-[2rem] bg-blush p-5 sm:p-7 lg:sticky lg:top-24">
-        <h3 className="font-display text-2xl font-extrabold uppercase">Your order</h3>
-
-        {cart.length === 0 ? (
-          <p className="mt-4 rounded-2xl border border-dashed border-char/20 p-4 text-sm text-char/70">Build a plate and tap Add to order.</p>
-        ) : (
-          <ul key={pulse} className="mt-4 space-y-2">
-            {cart.map((p, i) => (
-              <li key={i} className="cart-row flex items-start justify-between gap-3 rounded-2xl bg-paper p-3 text-sm">
-                <span><span className="font-mono">{p.qty}×</span> {describe(p)}</span>
-                <span className="flex shrink-0 items-center gap-1">
-                  <span className="font-mono">{formatPrice(plateTotal(p) * p.qty)}</span>
-                  <button type="button" aria-label={`Remove ${describe(p)}`} onClick={() => setCart((c) => c.filter((_, j) => j !== i))} className="press -my-2 -mr-2 size-11 rounded-full text-char/60 hover:text-bq-red">✕</button>
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="mt-4 flex items-baseline justify-between border-t border-char/15 pt-3">
-          <span className="font-display font-extrabold uppercase">Total</span>
-          <span className="font-mono text-2xl text-bq-red">{formatPrice(total)}</span>
-        </div>
-
-        <div className="mt-5 space-y-3 text-sm">
-          <label className="block">Name<input className={input} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoComplete="name" required /></label>
-          <label className="block">Phone<input className={input} type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} autoComplete="tel" required /></label>
-          <fieldset className="grid grid-cols-2 gap-2">
-            <legend className="mb-1">Delivery or pickup</legend>
-            {["Delivery", "Pickup"].map((m) => (
-              <label key={m} className={`press flex min-h-12 cursor-pointer items-center justify-center rounded-xl border font-medium transition-[background-color,color] duration-150 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-bq-red ${form.mode === m ? "border-char bg-char text-white" : "border-char/15 bg-paper"}`}>
-                <input type="radio" name="mode" value={m} checked={form.mode === m} onChange={() => setForm({ ...form, mode: m })} className="sr-only" />{m}
-              </label>
-            ))}
-          </fieldset>
-          {form.mode === "Delivery" && <label className="block">Delivery address<input className={input} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} autoComplete="street-address" required /></label>}
-          <label className="block">Note (optional)<input className={input} value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} /></label>
-        </div>
-
-        <button type="submit" disabled={!ready} className="press mt-5 min-h-12 w-full rounded-full bg-bq-red font-display text-lg font-extrabold uppercase text-white transition-[background-color,opacity] duration-150 hover:bg-deep-red disabled:cursor-not-allowed disabled:opacity-40">
-          Send order on WhatsApp
+      {/* ---------- cart pill ---------- */}
+      {count > 0 && !open && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="cart-pill press fixed inset-x-4 bottom-[calc(env(safe-area-inset-bottom)+0.85rem)] z-[55] mx-auto flex min-h-14 max-w-md items-center justify-between rounded-full bg-char px-6 text-white shadow-[0_16px_36px_-12px_rgba(20,16,14,0.6)] hover:bg-deep-red"
+        >
+          <span className="flex items-center gap-3">
+            <span key={pulse} className="cart-bump flex size-8 items-center justify-center rounded-full bg-bq-red font-mono text-sm">{count}</span>
+            <span className="font-display text-lg font-extrabold uppercase">View order</span>
+          </span>
+          <span key={total} className="price-tick font-mono">{formatPrice(total)}</span>
         </button>
-        <p className="mt-2 text-center text-xs text-char/70">
-          {cart.length === 0 ? "Add at least one plate first." : !ready ? "Fill in your name, phone and address." : "Opens WhatsApp with your order written out."}
-        </p>
-      </form>
+      )}
+
+      {/* ---------- checkout modal ---------- */}
+      {open && createPortal(
+        <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-6" data-state={closing ? "closing" : "open"}>
+          <button type="button" aria-label="Close order" tabIndex={-1} onClick={close} className="sheet-backdrop absolute inset-0 bg-char/50 backdrop-blur-[2px]" />
+          <div
+            ref={sheetRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="order-title"
+            tabIndex={-1}
+            className="sheet relative max-h-[92svh] w-full overflow-y-auto rounded-t-[2rem] bg-blush p-5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)] outline-none sm:max-w-lg sm:rounded-[2rem] sm:p-7"
+          >
+            <span aria-hidden="true" className="mx-auto -mt-1 mb-3 block h-1.5 w-10 rounded-full bg-char/20 sm:hidden" />
+      {/* ---------- checkout ---------- */}
+            <form onSubmit={send}>
+              <div className="flex items-center justify-between">
+                <h3 id="order-title" className="font-display text-2xl font-extrabold uppercase">Your order</h3>
+                <button type="button" onClick={close} aria-label="Close" className="press -mr-2 size-11 rounded-full text-xl text-char/60 hover:text-bq-red">✕</button>
+              </div>
+      
+              {cart.length === 0 ? (
+                <p className="mt-4 rounded-2xl border border-dashed border-char/20 p-4 text-sm text-char/70">Build a plate and tap Add to order.</p>
+              ) : (
+                <ul key={pulse} className="mt-4 space-y-2">
+                  {cart.map((p, i) => (
+                    <li key={i} className="cart-row flex items-start justify-between gap-3 rounded-2xl bg-paper p-3 text-sm">
+                      <span><span className="font-mono">{p.qty}×</span> {describe(p)}</span>
+                      <span className="flex shrink-0 items-center gap-1">
+                        <span className="font-mono">{formatPrice(plateTotal(p) * p.qty)}</span>
+                        <button type="button" aria-label={`Remove ${describe(p)}`} onClick={() => remove(i)} className="press -my-2 -mr-2 size-11 rounded-full text-char/60 hover:text-bq-red">✕</button>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="mt-4 flex items-baseline justify-between border-t border-char/15 pt-3">
+                <span className="font-display font-extrabold uppercase">Total</span>
+                <span className="font-mono text-2xl text-bq-red">{formatPrice(total)}</span>
+              </div>
+      
+              <div className="mt-5 space-y-3 text-sm">
+                <label className="block">Name<input className={input} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoComplete="name" required /></label>
+                <label className="block">Phone<input className={input} type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} autoComplete="tel" required /></label>
+                <fieldset className="grid grid-cols-2 gap-2">
+                  <legend className="mb-1">Delivery or pickup</legend>
+                  {["Delivery", "Pickup"].map((m) => (
+                    <label key={m} className={`press flex min-h-12 cursor-pointer items-center justify-center rounded-xl border font-medium transition-[background-color,color] duration-150 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-bq-red ${form.mode === m ? "border-char bg-char text-white" : "border-char/15 bg-paper"}`}>
+                      <input type="radio" name="mode" value={m} checked={form.mode === m} onChange={() => setForm({ ...form, mode: m })} className="sr-only" />{m}
+                    </label>
+                  ))}
+                </fieldset>
+                {form.mode === "Delivery" && <label className="block">Delivery address<input className={input} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} autoComplete="street-address" required /></label>}
+                <label className="block">Note (optional)<input className={input} value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} /></label>
+              </div>
+      
+              <button type="submit" disabled={!ready} className="press mt-5 min-h-12 w-full rounded-full bg-bq-red font-display text-lg font-extrabold uppercase text-white transition-[background-color,opacity] duration-150 hover:bg-deep-red disabled:cursor-not-allowed disabled:opacity-40">
+                Send order on WhatsApp
+              </button>
+              <p className="mt-2 text-center text-xs text-char/70">
+                {cart.length === 0 ? "Add at least one plate first." : !ready ? "Fill in your name, phone and address." : "Opens WhatsApp with your order written out."}
+              </p>
+            </form>
+          </div>
+        </div>,
+        document.body,
+      )}
     </div>
   );
 }
