@@ -1,5 +1,4 @@
 "use client";
-import Section from "./Section";
 import OrderButton from "./OrderButton";
 
 /**
@@ -10,13 +9,11 @@ import OrderButton from "./OrderButton";
  */
 export default function Closing() {
   return (
-    <Section id="closing" eyebrow="One more thing" title="STILL HUNGRY?" tone="blush">
-      <div className="flex flex-col items-center text-center">
-        <p className="font-display text-3xl uppercase leading-tight text-char">
-          Get in touch with us for tasty jollof rice.
-        </p>
-        <OrderButton label="ORDER ON WHATSAPP" className="mt-6" />
+    <section id="closing" className="bg-paper">
+      <div className="mx-auto flex max-w-3xl flex-col items-center px-5 py-14 text-center sm:px-8">
+        <p className="font-display text-3xl font-extrabold uppercase leading-tight text-char">Get in touch with us<br /><span className="text-bq-red">for tasty jollof rice</span></p>
+        <OrderButton label="ORDER NOW" className="mt-6" />
       </div>
-    </Section>
+    </section>
   );
 }

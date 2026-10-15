@@ -1,48 +1,42 @@
 "use client";
-import OrderButton from "./OrderButton";
 import Image from "next/image";
+import OrderButton from "./OrderButton";
 import CookDay from "./CookDay";
-import { useCity } from "../data/cityContext";
 
 /**
- * BQ's hero layout — food centred, small red mono labels diagonally opposed
- * above/below it on mobile and beside it on desktop, order pill under the food,
- * motto and phone number in the side margins on desktop.
- *
- * Zino's food is a still photo of his own packs.
+ * Mobile first: headline, photo and the order button all sit inside the first
+ * screen of a 390x844 phone. Desktop puts text left, photo right.
  */
 export default function HeroOverlay() {
-  const { locations } = useCity();
   return (
-    <section id="hero" aria-label="Zino's jollof rice" className="relative bg-paper">
-      <div className="mx-auto flex min-h-[calc(100svh-4rem)] max-w-7xl flex-col items-center justify-center px-5 py-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-10 lg:px-12">
-        {/* left margin on desktop: motto */}
-        <h1 className="order-3 mt-6 text-center font-display text-3xl font-extrabold uppercase leading-[0.95] text-char lg:order-1 lg:mt-0 lg:text-left lg:text-5xl">
-          Get your
-          <br />
-          <span className="text-bq-red">tasty jollof rice</span>
-          <br />
-          <span className="text-xl lg:text-2xl">Available every weekend</span>
-        </h1>
-
-        {/* the food */}
-        <div className="order-2 w-full max-w-[min(80vw,52vh)] lg:w-[min(36vw,58vh)] lg:max-w-none">
-          <p className="mb-2 text-right font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red md:text-xs">Pre-order Thursdays & Fridays</p>
-          <div className="overflow-hidden rounded-[2rem] shadow-[0_30px_60px_-24px_rgba(165,6,2,0.5)]">
-            <div className="relative aspect-[3/4] w-full"><Image src="/zino/hero.webp" alt="Zino's jollof rice with chicken and turkey, plantain and coleslaw" fill priority sizes="(max-width:1024px) 80vw, 36vw" className="object-cover" /></div>
+    <section id="hero" aria-label="Zino's jollof rice" className="bg-paper">
+      <div className="mx-auto grid max-w-6xl gap-5 px-5 pb-10 pt-5 sm:px-8 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-14 lg:py-16">
+        <div className="lg:order-2">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[1.75rem] shadow-[0_24px_48px_-24px_rgba(165,6,2,0.55)] lg:aspect-[4/5]">
+            <Image
+              src="/zino/hero.webp"
+              alt="Zino's jollof rice with chicken and turkey, plantain and coleslaw"
+              fill
+              priority
+              sizes="(max-width:1024px) 100vw, 50vw"
+              className="object-cover object-[50%_30%]"
+            />
           </div>
-          <p className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red md:text-xs">Weekend morning delivery on campus</p>
         </div>
 
-        {/* right margin on desktop: next pot + number */}
-        <div className="order-4 mt-4 flex flex-col items-center gap-4 lg:order-3 lg:mt-0 lg:items-end lg:text-right">
-          <a href="#order" className="text-center text-sm text-char/70 underline-offset-4 hover:underline lg:text-right">
-            Next delivery
-            <br />
-            <strong className="font-display text-xl font-extrabold uppercase text-char"><CookDay /></strong>
-          </a>
-          <OrderButton />
-          <p className="font-mono text-sm text-char">{locations[0].display}</p>
+        <div className="lg:order-1">
+          <h1 className="font-display text-[2.6rem] font-extrabold uppercase leading-[0.92] tracking-[-0.02em] text-char sm:text-6xl lg:text-7xl">
+            Get your <span className="text-bq-red">tasty jollof rice</span>
+          </h1>
+          <p className="mt-2 font-display text-lg font-extrabold uppercase text-char/80 sm:text-xl">Available every weekend</p>
+
+          <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl bg-blush px-4 py-3 lg:max-w-md">
+            <span className="leading-tight">
+              <span className="block text-xs text-char/70">Next delivery</span>
+              <span className="block font-display font-extrabold uppercase"><CookDay /></span>
+            </span>
+            <OrderButton className="shrink-0" />
+          </div>
         </div>
       </div>
     </section>

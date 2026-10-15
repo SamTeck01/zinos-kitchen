@@ -2,7 +2,6 @@ import { LOCATIONS, ZINO, INSTAGRAM } from "@/data/menu";
 import Closing from "../components/Closing";
 import Footer from "../components/Footer";
 import HeroOverlay from "../components/HeroOverlay";
-import Section from "../components/Section";
 import OrderForm from "../components/OrderForm";
 import Packages from "../components/Packages";
 
@@ -14,9 +13,13 @@ export default function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@graph": [restaurant, menu] }) }} />
       <HeroOverlay />
-      <Section id="order" eyebrow="The menu · Pre-order Thursdays & Fridays" title="ZINO'S WEEKEND PACKAGE" tone="paper">
-        <OrderForm />
-      </Section>
+      <section id="order" className="scroll-mt-16 bg-paper">
+        <div className="mx-auto max-w-3xl px-5 pb-14 pt-4 sm:px-8 lg:pt-10">
+          <h2 className="font-display text-3xl font-extrabold uppercase text-char sm:text-4xl">Zino&apos;s weekend package</h2>
+          <p className="mb-5 mt-1 text-char/70">Tap a pack to order. Add extras on the next step.</p>
+          <OrderForm />
+        </div>
+      </section>
       <Packages />
       <Closing />
       <Footer />

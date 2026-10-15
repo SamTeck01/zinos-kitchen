@@ -18,7 +18,7 @@ export default function Footer() {
         <p>WhatsApp <a className="underline" href={`https://wa.me/${WHATSAPP}`}>{LOCATIONS.ilorin[0].display}</a> · Instagram <a className="underline" href={INSTAGRAM}>{INSTAGRAM_HANDLE}</a></p>
       </div>
       <p className="mt-10 text-xs text-char/50">
-        Demo site. Food photos: Bukky658, DromoTetteh, Noahalorwu (CC BY-SA, Wikimedia Commons).
+        Demo site.
       </p>
     </footer>
   );

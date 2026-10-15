@@ -115,40 +115,48 @@ export default function OrderForm() {
   return (
     <>
       {/* ---------- the package, on the page ---------- */}
-      <div className="grid gap-3 sm:grid-cols-2">
+      <ul className="space-y-3">
         {PACKS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            onClick={() => show(0, p.id)}
-            className="press group relative aspect-[4/5] overflow-hidden rounded-3xl text-left"
-          >
-            <Image src={p.img!} alt={p.name} fill sizes="(max-width:640px) 100vw, 50vw" className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
-            <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-char/85 via-char/40 to-transparent p-5 pt-20">
-              <span>
-                <span className="block font-display text-2xl font-extrabold uppercase leading-none text-white sm:text-3xl">{p.name}</span>
-                <span className="mt-2 block font-mono text-lg text-gold">{formatPrice(p.price)}</span>
+          <li key={p.id}>
+            <button
+              type="button"
+              onClick={() => show(0, p.id)}
+              className="press flex w-full items-center gap-4 rounded-3xl bg-white p-2.5 pr-4 text-left shadow-[0_8px_24px_-16px_rgba(20,16,14,0.35)]"
+            >
+              <span className="relative size-24 shrink-0 overflow-hidden rounded-2xl sm:size-32">
+                <Image src={p.img!} alt={p.name} fill sizes="8rem" className="object-cover" />
               </span>
-              <span className="flex min-h-11 shrink-0 items-center rounded-full bg-bq-red px-5 font-display font-extrabold uppercase text-white">Order</span>
-            </span>
-          </button>
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-xl font-extrabold uppercase leading-[1.05] sm:text-2xl">{p.name}</span>
+                <span className="mt-1 block font-mono text-lg text-bq-red">{formatPrice(p.price)}</span>
+              </span>
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-bq-red text-white" aria-hidden="true">
+                <svg viewBox="0 0 20 20" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M10 4v12M4 10h12" /></svg>
+              </span>
+            </button>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <div className="mt-6 rounded-3xl bg-blush p-5 sm:p-6">
-        <p className="font-display text-xl font-extrabold uppercase">Extras</p>
-        <ul className="mt-2 grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="mt-6">
+        <p className="font-display text-lg font-extrabold uppercase">Extras</p>
+        <ul className="mt-1 divide-y divide-char/10">
           {EXTRAS.map((e) => (
-            <li key={e.id} className="flex items-baseline justify-between border-b border-char/10 py-2">
+            <li key={e.id} className="flex items-baseline justify-between py-2.5">
               <span>{e.name}</span><span className="font-mono text-bq-red">{formatPrice(e.price)}</span>
             </li>
           ))}
         </ul>
-        <ul className="mt-4 space-y-1 font-mono text-xs uppercase tracking-wider text-char/70">
-          {SCHEDULE.map((s) => <li key={s}>{s}</li>)}
-          <li className="text-deep-red">Note: {DELIVERY_NOTE}</li>
-        </ul>
       </div>
+
+      <div className="mt-6 space-y-1.5 rounded-2xl bg-blush p-4 text-sm">
+        {SCHEDULE.map((s) => <p key={s}>{s}.</p>)}
+        <p className="text-deep-red">{DELIVERY_NOTE}.</p>
+      </div>
+
+      <button type="button" onClick={() => show(0)} className="press mt-6 flex min-h-14 w-full items-center justify-center rounded-full bg-bq-red font-display text-lg font-extrabold uppercase text-white hover:bg-deep-red sm:w-auto sm:px-10">
+        Build your order
+      </button>
 
       {/* ---------- cart pill ---------- */}
       {count > 0 && !open && (

@@ -124,4 +124,4 @@ export function nextDeliveryDay(now = new Date()): Date {
   if (now.getDay() === 6) d.setDate(d.getDate() + 7);
   return d;
 }
-export const fmtDay = (d: Date) => d.toLocaleDateString("en-NG", { weekday: "long", day: "numeric", month: "long" });
+export const fmtDay = (d: Date) => d.toLocaleDateString("en-NG", { weekday: "short", day: "numeric", month: "short" });
