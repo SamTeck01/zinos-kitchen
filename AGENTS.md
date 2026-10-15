@@ -3,15 +3,18 @@
 Built from the BQ Cuisine codebase (same components, palette, type and rules).
 Differences from BQ:
 
-- **Zino's Kitchen** sells **jollof rice by the litre**, cooked once a week.
-  Customers order during the week; Zino cooks and delivers on **Saturday**.
-  Orders close Friday 6pm (`CUTOFF` in `data/menu.ts`).
+- **Zino's Kitchen** has TWO offers, like BQ's menu + platters:
+  1. **Plates** of jollof rice with proteins and sides (`ZINO`) — the normal
+     menu, plus the plate builder.
+  2. **Food by the litre** (`LITRES`) — jollof, fried rice, stew, beans,
+     amala, eba, fufu, iyan — ordered in the week and cooked on **Saturday**.
+     Orders close Friday 6pm (`CUTOFF`). Rendered by `Packages.tsx`.
 - One city (Ilorin). There is no city switch. `City` keeps both keys only so
   BQ's city-aware components type-check; both point to the same data.
 - The hero is a looping video (`components/HeroVideo.tsx`), not scroll frames.
   `ScrollFramesHero.tsx` is not used.
-- BQ's Packages section is replaced by the **plate builder**
-  (`components/OrderForm.tsx`): litres → protein → sides → cart → WhatsApp.
+- Plate builder: `components/OrderForm.tsx` (plate of jollof → protein →
+  sides → cart → WhatsApp).
 - No Chowdeck. WhatsApp only.
 - Every price, the WhatsApp number and the pickup point in `data/menu.ts` are
   PLACEHOLDERS until Zino confirms them.

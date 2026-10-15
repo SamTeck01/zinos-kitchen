@@ -19,9 +19,9 @@ export default function HeroOverlay() {
       <div className="mx-auto flex min-h-[calc(100svh-4rem)] max-w-7xl flex-col items-center justify-center px-5 py-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-10 lg:px-12">
         {/* left margin on desktop: motto */}
         <h1 className="order-3 mt-6 text-center font-display text-3xl font-extrabold uppercase leading-[0.95] text-char lg:order-1 lg:mt-0 lg:text-left lg:text-5xl">
-          Jollof rice
+          Smoky
           <br />
-          <span className="text-bq-red">by the litre</span>
+          <span className="text-bq-red">jollof rice</span>
         </h1>
 
         {/* the food */}
@@ -30,16 +30,16 @@ export default function HeroOverlay() {
           <div className="overflow-hidden rounded-[2rem] shadow-[0_30px_60px_-24px_rgba(165,6,2,0.5)]">
             <HeroVideo />
           </div>
-          <p className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red md:text-xs">Cooked every Saturday</p>
+          <p className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.2em] text-bq-red md:text-xs">Plates every day · Litres on Saturday</p>
         </div>
 
         {/* right margin on desktop: next pot + number */}
         <div className="order-4 mt-4 flex flex-col items-center gap-4 lg:order-3 lg:mt-0 lg:items-end lg:text-right">
-          <p className="text-center text-sm text-char/70 lg:text-right">
-            Next pot
+          <a href="#litres" className="text-center text-sm text-char/70 underline-offset-4 hover:underline lg:text-right">
+            Food by the litre, next cook
             <br />
             <strong className="font-display text-xl font-extrabold uppercase text-char"><CookDay /></strong>
-          </p>
+          </a>
           <OrderButton />
           <p className="font-mono text-sm text-char">{locations[0].display}</p>
         </div>

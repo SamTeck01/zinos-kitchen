@@ -13,7 +13,7 @@ export default function Closing() {
     <Section id="closing" eyebrow="One more thing" title="STILL HUNGRY?" tone="blush">
       <div className="flex flex-col items-center text-center">
         <p className="font-display text-3xl uppercase leading-tight text-char">
-          Order by Friday. Eat on Saturday.
+          Plates or litres. Order on WhatsApp.
         </p>
         <OrderButton label="ORDER ON WHATSAPP" className="mt-6" />
       </div>

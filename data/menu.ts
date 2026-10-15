@@ -5,8 +5,10 @@
  * ⚠️ PLACEHOLDERS: every price, the WhatsApp number, the city and the cut-off
  * are stand-ins until Zino confirms them. Change them here and only here.
  *
- * Zino sells jollof BY THE LITRE, cooked once a week on Saturday. Litres are
- * modelled as `sizes`, which every BQ component already renders.
+ * Two offers, like BQ's menu + platters:
+ *   ZINO    normal plates of jollof rice, proteins and sides
+ *   LITRES  bulk food by the litre (jollof, fried rice, stew, swallow…),
+ *           ordered in the week and cooked on Saturday. Litres are `sizes`.
  */
 
 /** Zino is in one city. The second key only exists so BQ's city-aware components type-check. */
@@ -23,21 +25,17 @@ export type MenuItem = {
 
 export type MenuCategory = { id: string; label: string; items: MenuItem[] };
 
-const LITRES = (l1: number, l2: number, l3: number, l5: number) => [
-  { label: "1 Litre", price: l1 },
-  { label: "2 Litres", price: l2 },
-  { label: "3 Litres", price: l3 },
-  { label: "5 Litres", price: l5 },
-];
+/* ---------------------------------------------------- NORMAL MENU (plates) */
 
 export const ZINO: MenuCategory[] = [
   {
     id: "jollof",
-    label: "Jollof by the Litre",
+    label: "Jollof Rice",
     items: [
-      { name: "Party Jollof Rice", desc: "Smoky jollof rice, cooked fresh on Saturday", sizes: LITRES(4000, 7500, 11000, 18000) },
-      { name: "Jollof + Chicken", desc: "Jollof rice, fried chicken", sizes: LITRES(6500, 12000, 17500, 28000) },
-      { name: "Jollof + Fish", desc: "Jollof rice, fried fish, plantain", sizes: LITRES(7000, 13000, 19000, 30000) },
+      { name: "Jollof Rice", desc: "A plate of smoky jollof rice", price: 2500 },
+      { name: "Jollof Rice & Chicken", desc: "Jollof rice, fried chicken", price: 5000 },
+      { name: "Jollof Rice & Fish", desc: "Jollof rice, fried fish", price: 5500 },
+      { name: "Jollof Rice & Beef", desc: "Jollof rice, beef", price: 4500 },
     ],
   },
   {
@@ -59,9 +57,31 @@ export const ZINO: MenuCategory[] = [
   },
 ];
 
-/** BQ's Packages section reads these. Zino has no packages, so it is replaced by the plate builder. */
-export const PACKAGES: MenuItem[] = [];
-export const PACKAGE_IMAGES: Record<string, string | null> = {};
+/* ------------------------------------------------------ FOOD BY THE LITRE */
+/* Separate from the plates, like BQ's platters/packages. Bulk food sold per
+   litre, ordered during the week and cooked on Saturday. */
+
+const L = (l1: number, l2: number, l3: number, l5: number) => [
+  { label: "1 Litre", price: l1 },
+  { label: "2 Litres", price: l2 },
+  { label: "3 Litres", price: l3 },
+  { label: "5 Litres", price: l5 },
+];
+
+export const LITRES: MenuItem[] = [
+  { name: "Jollof Rice", sizes: L(4000, 7500, 11000, 18000) },
+  { name: "Fried Rice", sizes: L(4500, 8500, 12500, 20000) },
+  { name: "Stew", sizes: L(5000, 9500, 14000, 22000) },
+  { name: "Beans", sizes: L(3500, 6500, 9500, 15000) },
+  { name: "Amala", sizes: L(3000, 5500, 8000, 13000) },
+  { name: "Eba", sizes: L(2500, 4500, 6500, 10500) },
+  { name: "Fufu", sizes: L(3000, 5500, 8000, 13000) },
+  { name: "Iyan (Pounded Yam)", sizes: L(4000, 7500, 11000, 18000) },
+];
+
+export const LITRE_IMAGES: Record<string, string | null> = {
+  "Jollof Rice": "/crops/rice.webp",
+};
 
 export const LOCATIONS = {
   ilorin: [
@@ -86,7 +106,7 @@ export const LOCATIONS = {
 
 export const MENUS: Record<City, MenuCategory[]> = { ilorin: ZINO, lagos: ZINO };
 
-export const TAGLINE = "Jollof Rice by the Litre";
+export const TAGLINE = "Jollof Rice & Food by the Litre";
 export const INSTAGRAM = "https://instagram.com/"; // TODO: Zino's handle
 
 export const formatPrice = (n: number) => `N${n.toLocaleString("en-NG")}`;
@@ -99,7 +119,8 @@ export const CITY = "Ilorin";
 /** Orders close Friday 6pm for Saturday's cook. */
 export const CUTOFF = { weekday: 5, hour: 18 };
 
-export const RICE: Option[] = ZINO[0].items[0].sizes!.map((s) => ({ id: s.label, name: s.label, price: s.price }));
+/** Plate builder: a plate of jollof, then a protein and sides. */
+export const BASE: Option = { id: "jollof", name: "Jollof Rice", price: 2500 };
 export const PROTEINS: Option[] = [
   { id: "none", name: "No protein", price: 0 },
   { id: "chicken", name: "Chicken", price: 2500, img: "/crops/chicken.webp" },

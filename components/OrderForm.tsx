@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
-import { RICE, PROTEINS, SIDES, WHATSAPP, formatPrice, nextCookDay, fmtDay, type Option } from "../data/menu";
+import { useMemo, useState } from "react";
+import { BASE, PROTEINS, SIDES, WHATSAPP, formatPrice, type Option } from "../data/menu";
 
-type Plate = { rice: string; protein: string; sides: string[]; qty: number };
+type Plate = { protein: string; sides: string[]; qty: number };
 const byId = (list: Option[], id: string) => list.find((o) => o.id === id)!;
 const plateTotal = (p: Plate) =>
-  byId(RICE, p.rice).price + byId(PROTEINS, p.protein).price + p.sides.reduce((s, id) => s + byId(SIDES, id).price, 0);
+  BASE.price + byId(PROTEINS, p.protein).price + p.sides.reduce((s, id) => s + byId(SIDES, id).price, 0);
 const describe = (p: Plate) =>
-  [byId(RICE, p.rice).name + " Jollof", p.protein !== "none" && byId(PROTEINS, p.protein).name, ...p.sides.map((id) => byId(SIDES, id).name)]
+  [BASE.name, p.protein !== "none" && byId(PROTEINS, p.protein).name, ...p.sides.map((id) => byId(SIDES, id).name)]
     .filter(Boolean).join(" + ");
 
 /* Where each extra sits on the plate. Percentages of the plate box. */
@@ -37,12 +37,10 @@ function Chip({ active, onClick, children, label }: { active: boolean; onClick: 
 }
 
 export default function OrderForm() {
-  const [plate, setPlate] = useState<Plate>({ rice: "2 Litres", protein: "chicken", sides: ["plantain"], qty: 1 });
+  const [plate, setPlate] = useState<Plate>({ protein: "chicken", sides: ["plantain"], qty: 1 });
   const [cart, setCart] = useState<Plate[]>([]);
-  const [cookDay, setCookDay] = useState("this Saturday");
   const [form, setForm] = useState({ name: "", phone: "", mode: "Delivery", address: "", note: "" });
   const [pulse, setPulse] = useState(0);
-  useEffect(() => setCookDay(fmtDay(nextCookDay())), []);
 
   const unit = plateTotal(plate);
   const total = useMemo(() => cart.reduce((s, p) => s + plateTotal(p) * p.qty, 0), [cart]);
@@ -55,7 +53,7 @@ export default function OrderForm() {
     e.preventDefault();
     if (!ready) return;
     const msg = [
-      `Hi Zino's Kitchen, I'd like to order for ${cookDay}:`, "",
+      `Hi Zino's Kitchen, I'd like to order:`, "",
       ...cart.map((p) => `• ${p.qty} × ${describe(p)} — ${formatPrice(plateTotal(p) * p.qty)}`), "",
       `Total: ${formatPrice(total)}`,
       `Name: ${form.name}`, `Phone: ${form.phone}`,
@@ -78,9 +76,8 @@ export default function OrderForm() {
             <div className="absolute inset-0 rounded-full bg-white shadow-[0_24px_48px_-16px_rgba(165,6,2,0.35),0_4px_10px_rgba(20,16,14,0.08)]" />
             <div className="absolute inset-[6%] rounded-full ring-1 ring-char/5" />
             <div
-              key={plate.rice}
               className="plate-rice absolute overflow-hidden rounded-[46%_54%_50%_50%/52%_48%_52%_48%]"
-              style={{ inset: `${({ "1 Litre": 26, "2 Litres": 21, "3 Litres": 17, "5 Litres": 13 } as Record<string, number>)[plate.rice]}%` }}
+              style={{ inset: "18%" }}
             >
               <Image src="/crops/rice.webp" alt="" fill sizes="300px" className="object-cover" />
             </div>
@@ -106,19 +103,10 @@ export default function OrderForm() {
 
           {/* the choices */}
           <div className="space-y-6">
-            <fieldset>
-              <legend className="font-display text-lg font-extrabold uppercase">How much jollof?</legend>
-              <div className="mt-2 grid grid-cols-2 gap-2">
-                {RICE.map((r) => (
-                  <Chip key={r.id} active={plate.rice === r.id} onClick={() => setPlate({ ...plate, rice: r.id })}>
-                    <span className="flex flex-col leading-tight">
-                      <span className="font-display font-extrabold uppercase">{r.name}</span>
-                      <span className="font-mono text-xs opacity-80">{formatPrice(r.price)}</span>
-                    </span>
-                  </Chip>
-                ))}
-              </div>
-            </fieldset>
+            <div className="flex items-baseline justify-between rounded-2xl bg-blush px-4 py-3">
+              <span className="font-display text-lg font-extrabold uppercase">Plate of {BASE.name}</span>
+              <span className="font-mono text-sm text-bq-red">{formatPrice(BASE.price)}</span>
+            </div>
 
             <fieldset>
               <legend className="font-display text-lg font-extrabold uppercase">Protein</legend>
@@ -168,7 +156,6 @@ export default function OrderForm() {
       {/* ---------- checkout ---------- */}
       <form onSubmit={send} className="h-fit rounded-[2rem] bg-blush p-5 sm:p-7 lg:sticky lg:top-24">
         <h3 className="font-display text-2xl font-extrabold uppercase">Your order</h3>
-        <p className="text-sm text-char/70">Cooking {cookDay}</p>
 
         {cart.length === 0 ? (
           <p className="mt-4 rounded-2xl border border-dashed border-char/20 p-4 text-sm text-char/70">Build a plate and tap Add to order.</p>

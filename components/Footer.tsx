@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <footer className="bg-blush px-5 pb-28 pt-12 text-char lg:px-12 lg:pb-12">
       <p className="font-display text-3xl font-extrabold uppercase text-bq-red">Zino&apos;s Kitchen</p>
-      <p className="mt-1 text-char/70">Jollof rice by the litre. Cooked every Saturday.</p>
+      <p className="mt-1 text-char/70">Jollof rice plates. Food by the litre, cooked every Saturday.</p>
       <p className="mt-6 text-sm text-char/70">Ilorin, Kwara</p>
       <p className="mt-10 text-xs text-char/50">
         Demo site. Food photos: Bukky658, DromoTetteh, Noahalorwu (CC BY-SA, Wikimedia Commons).

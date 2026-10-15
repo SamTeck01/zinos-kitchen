@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import HeroOverlay from "../components/HeroOverlay";
 import Section from "../components/Section";
 import OrderForm from "../components/OrderForm";
+import Packages from "../components/Packages";
 
 export default function Home() {
   const loc = LOCATIONS.ilorin[0];
@@ -19,10 +20,11 @@ export default function Home() {
       <HeroOverlay />
       <CravingCategories />
       <Favourites />
-      <Section id="order" eyebrow="Order for Saturday" title="BUILD YOUR PLATE" tone="paper">
+      <Section id="order" eyebrow="Plate it your way" title="BUILD YOUR PLATE" tone="paper">
         <OrderForm />
       </Section>
       <MenuSection />
+      <Packages />
       <Locations />
       <Closing />
       <Footer />
