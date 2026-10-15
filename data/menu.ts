@@ -80,7 +80,6 @@ export const LITRES: MenuItem[] = [
 ];
 
 export const LITRE_IMAGES: Record<string, string | null> = {
-  "Jollof Rice": "/crops/rice.webp",
 };
 
 export const LOCATIONS = {
