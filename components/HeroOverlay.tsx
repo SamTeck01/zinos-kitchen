@@ -13,7 +13,7 @@ import { PACKS, formatPrice } from "../data/menu";
 export default function HeroOverlay() {
   const { locations } = useCity();
   return (
-    <section id="hero" aria-label="Zino's jollof rice" className="bg-paper">
+    <section id="hero" aria-label="Zino's jollof rice" className="overflow-x-clip bg-paper">
       <div className="mx-auto flex max-w-7xl flex-col items-center px-5 pb-12 pt-8 lg:grid lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-12 lg:px-12 lg:py-10">
         {/* the food */}
         <div className="w-full max-w-[22rem] lg:order-2 lg:w-[min(40vw,70vh)] lg:max-w-none">

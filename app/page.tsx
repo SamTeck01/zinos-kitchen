@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import HeroOverlay from "../components/HeroOverlay";
 import OrderForm from "../components/OrderForm";
 import Packages from "../components/Packages";
+import WeekdaySpecials from "../components/WeekdaySpecials";
 
 export default function Home() {
   const loc = LOCATIONS.ilorin[0];
@@ -21,6 +22,7 @@ export default function Home() {
           <OrderForm />
         </div>
       </section>
+      <WeekdaySpecials />
       <Packages />
       <Closing />
       <Footer />

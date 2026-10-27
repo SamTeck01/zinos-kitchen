@@ -53,6 +53,31 @@ export const ZINO: MenuCategory[] = [
   },
 ];
 
+/* ------------------------------------------------- WEEKDAY SPECIALS */
+/* Source: Zino's WhatsApp, 27 Oct 2026. One special per weekday, Monday to
+   Thursday, no Friday. The weekend package stays the main offer.
+   Wednesday is pepper soup: catfish N4,000, goat meat N6,000, white rice +N1,000
+   (sold by the bowl — Zino said not to write "litre"). The other days have no
+   price yet, so they ask on WhatsApp. day: 1 = Monday … 4 = Thursday. */
+
+export type Special = { day: number; dayName: string; dish: string; items?: MenuItem[]; addOn?: MenuItem };
+
+export const WEEKDAY_SPECIALS: Special[] = [
+  { day: 1, dayName: "Monday", dish: "Gizdodo" },
+  { day: 2, dayName: "Tuesday", dish: "Ewa Agoyin" },
+  {
+    day: 3,
+    dayName: "Wednesday",
+    dish: "Pepper Soup",
+    items: [
+      { name: "Catfish Pepper Soup", price: 4000 },
+      { name: "Goat Meat Pepper Soup", price: 6000 },
+    ],
+    addOn: { name: "White rice", price: 1000 },
+  },
+  { day: 4, dayName: "Thursday", dish: "Ofada Rice with Ofada Sauce" },
+];
+
 /* ------------------------------------------------------ FOOD BY THE LITRE */
 /* Separate from the package. No prices confirmed yet, so none are shown:
    each card asks on WhatsApp. Add `sizes` here when Zino sends them. */
