@@ -85,6 +85,8 @@ export type ItemModalProps = {
    */
   related?: { item: MenuItem; image: string | null }[];
   cityLabel: string;
+  /** What the order is for, e.g. "Wednesday Special". */
+  when?: string;
   whatsapp: string;
   onClose: () => void;
   /** Swap the modal's contents to a related item without closing. */
@@ -133,6 +135,7 @@ export default function ItemModal({
   images,
   related = [],
   cityLabel,
+  when,
   whatsapp,
   onClose,
   onSelectRelated,
@@ -244,9 +247,9 @@ export default function ItemModal({
   const orderName =
     hasSizes && chosen ? `${item.name} (${chosen.label})` : item.name;
   const message =
-    `Hi Zino's Kitchen, I'd like to order the ${orderName}` +
+    `Hi Zino's, I'd like to order the ${orderName}` +
     (priceLabel ? ` — ${priceLabel}` : "") +
-    ` for Saturday.`;
+    (when ? ` (${when}).` : ".");
   const href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
 
   const includes = item.includes ?? [];
@@ -451,7 +454,7 @@ export default function ItemModal({
           </div>
 
           <p className="mt-3 text-center font-mono text-[0.7rem] uppercase tracking-wider text-char/50">
-            {cityLabel} · Cooked Saturday
+            {when ?? cityLabel}
           </p>
 
           {/* ------------------------------------------- more from category */}

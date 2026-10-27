@@ -60,22 +60,19 @@ export const ZINO: MenuCategory[] = [
    (sold by the bowl — Zino said not to write "litre"). The other days have no
    price yet, so they ask on WhatsApp. day: 1 = Monday … 4 = Thursday. */
 
-export type Special = { day: number; dayName: string; dish: string; items?: MenuItem[]; addOn?: MenuItem };
-
-export const WEEKDAY_SPECIALS: Special[] = [
-  { day: 1, dayName: "Monday", dish: "Gizdodo" },
-  { day: 2, dayName: "Tuesday", dish: "Ewa Agoyin" },
+export const WEEKDAY_SPECIALS: MenuCategory[] = [
+  { id: "monday", label: "Monday Special", items: [{ name: "Gizdodo" }] },
+  { id: "tuesday", label: "Tuesday Special", items: [{ name: "Ewa Agoyin" }] },
   {
-    day: 3,
-    dayName: "Wednesday",
-    dish: "Pepper Soup",
+    id: "wednesday",
+    label: "Wednesday Special",
     items: [
       { name: "Catfish Pepper Soup", price: 4000 },
       { name: "Goat Meat Pepper Soup", price: 6000 },
+      { name: "White Rice (add-on)", price: 1000 },
     ],
-    addOn: { name: "White rice", price: 1000 },
   },
-  { day: 4, dayName: "Thursday", dish: "Ofada Rice with Ofada Sauce" },
+  { id: "thursday", label: "Thursday Special", items: [{ name: "Ofada Rice with Ofada Sauce" }] },
 ];
 
 /* ------------------------------------------------------ FOOD BY THE LITRE */

@@ -1,10 +1,10 @@
-import { LOCATIONS, ZINO, INSTAGRAM } from "@/data/menu";
+import { LOCATIONS, ZINO, INSTAGRAM, WEEKDAY_SPECIALS } from "@/data/menu";
 import Closing from "../components/Closing";
 import Footer from "../components/Footer";
 import HeroOverlay from "../components/HeroOverlay";
 import OrderForm from "../components/OrderForm";
 import Packages from "../components/Packages";
-import WeekdaySpecials from "../components/WeekdaySpecials";
+import MenuSection from "../components/MenuSection";
 
 export default function Home() {
   const loc = LOCATIONS.ilorin[0];
@@ -22,7 +22,7 @@ export default function Home() {
           <OrderForm />
         </div>
       </section>
-      <WeekdaySpecials />
+      <MenuSection id="weekday" categories={WEEKDAY_SPECIALS} eyebrow="Monday – Thursday" title="WEEKDAY SPECIALS" />
       <Packages />
       <Closing />
       <Footer />
