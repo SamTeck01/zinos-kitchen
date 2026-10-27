@@ -10,7 +10,7 @@ import { LITRES, formatPrice, WHATSAPP } from "@/data/menu";
  */
 export default function Packages() {
   const ask = (name: string) =>
-    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hi Zino's, how much is ${name} per litre?`)}`;
+    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hi Zinosfood, how much is ${name} per litre?`)}`;
 
   return (
     <section id="litres" className="bg-blush">

@@ -87,7 +87,7 @@ export default function OrderForm() {
   const send = () => {
     if (!detailsOk || !cart.length) return;
     const msg = [
-      `Hi Zino's, I'd like to pre-order:`, "",
+      `Hi Zinosfood, I'd like to pre-order:`, "",
       ...cart.map((p) => `• ${p.qty} × ${describe(p)} — ${formatPrice(packTotal(p) * p.qty)}`), "",
       `Total: ${formatPrice(total)}${form.mode === "Delivery" ? " (+ delivery)" : ""}`,
       `Name: ${form.name}`, `Phone: ${form.phone}`,

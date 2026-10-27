@@ -11,7 +11,7 @@ import { INSTAGRAM, INSTAGRAM_HANDLE, LOCATIONS, SCHEDULE, WHATSAPP } from "@/da
 export default function Footer() {
   return (
     <footer className="bg-blush px-5 pb-28 pt-12 text-char lg:px-12 lg:pb-12">
-      <p className="font-display text-3xl font-extrabold uppercase text-bq-red">Zino&apos;s</p>
+      <p className="font-display text-3xl font-extrabold uppercase text-bq-red">Zinosfood</p>
       <p className="font-mono text-xs uppercase tracking-[0.2em] text-char/70">Cakes &amp; Events</p>
       <div className="mt-6 space-y-1 text-sm text-char/70">
         <p>{SCHEDULE[0]}. {SCHEDULE[1]}.</p>

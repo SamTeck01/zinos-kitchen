@@ -209,7 +209,7 @@ export default function OrderButton({
   const [open, setOpen] = useState(false);
 
   const cityLabel = "Ilorin";
-  const msg = `Hi Zino's Kitchen, I'd like to order jollof for Saturday.`;
+  const msg = `Hi Zinosfood, I'd like to order jollof for the weekend.`;
   const whatsappHref = `https://wa.me/${locations[0].whatsapp}?text=${encodeURIComponent(msg)}`;
 
   const shape =

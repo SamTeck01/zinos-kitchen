@@ -34,7 +34,7 @@ export type MenuCategory = { id: string; label: string; items: MenuItem[] };
 export const ZINO: MenuCategory[] = [
   {
     id: "package",
-    label: "Zino's Package",
+    label: "Zinosfood Package",
     items: [
       { name: "Jollof Rice & Chicken", price: 3000 },
       { name: "Jollof Rice & Turkey", price: 6000 },
@@ -61,18 +61,18 @@ export const ZINO: MenuCategory[] = [
    price yet, so they ask on WhatsApp. day: 1 = Monday … 4 = Thursday. */
 
 export const WEEKDAY_SPECIALS: MenuCategory[] = [
-  { id: "monday", label: "Monday Special", items: [{ name: "Gizdodo" }] },
-  { id: "tuesday", label: "Tuesday Special", items: [{ name: "Ewa Agoyin" }] },
+  { id: "monday", label: "Monday Special", items: [{ name: "Gizdodo", desc: "Chicken gizzard, fried plantain, pepper sauce" }] },
+  { id: "tuesday", label: "Tuesday Special", items: [{ name: "Ewa Agoyin", desc: "Mashed beans, agoyin pepper sauce" }] },
   {
     id: "wednesday",
     label: "Wednesday Special",
     items: [
-      { name: "Catfish Pepper Soup", price: 4000 },
-      { name: "Goat Meat Pepper Soup", price: 6000 },
-      { name: "White Rice (add-on)", price: 1000 },
+      { name: "Catfish Pepper Soup", desc: "Catfish, pepper soup broth", price: 4000 },
+      { name: "Goat Meat Pepper Soup", desc: "Goat meat, pepper soup broth", price: 6000 },
+      { name: "White Rice (add-on)", desc: "Plain white rice to go with your pepper soup", price: 1000 },
     ],
   },
-  { id: "thursday", label: "Thursday Special", items: [{ name: "Ofada Rice with Ofada Sauce" }] },
+  { id: "thursday", label: "Thursday Special", items: [{ name: "Ofada Rice with Ofada Sauce", desc: "Ofada rice, ofada sauce" }] },
 ];
 
 /* ------------------------------------------------------ FOOD BY THE LITRE */
@@ -94,7 +94,7 @@ export const LITRES: MenuItem[] = [
 export const LOCATIONS = {
   ilorin: [
     {
-      name: "Zino's Cakes & Events",
+      name: "Zinosfood Cakes & Events",
       area: "On campus",
       landmark: "Morning delivery on weekends to all locations on campus",
       whatsapp: "2348079060151",
@@ -103,7 +103,7 @@ export const LOCATIONS = {
   ],
   lagos: [
     {
-      name: "Zino's Cakes & Events",
+      name: "Zinosfood Cakes & Events",
       area: "On campus",
       landmark: "Morning delivery on weekends to all locations on campus",
       whatsapp: "2348079060151",

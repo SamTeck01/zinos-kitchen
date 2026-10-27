@@ -42,8 +42,8 @@ import Image from "next/image";
 import type { MenuItem } from "@/data/menu";
 import { formatPrice } from "@/data/menu";
 import { useCity } from "../data/cityContext";
+import BrandPlaceholder from "./BrandPlaceholder";
 
-const PLACEHOLDER = "/images/placeholder.jpg";
 
 /**
  * BQ already write their descriptions as contents — "Grilled beef chunks,
@@ -115,9 +115,10 @@ function SafeImage({
 }) {
   const [failed, setFailed] = useState(false);
   const missing = src === null;
+  if (missing || failed) return <BrandPlaceholder size={sizes === "7rem" ? "sm" : "lg"} />;
   return (
     <Image
-      src={missing || failed ? PLACEHOLDER : src}
+      src={src}
       alt={missing ? "" : alt}
       fill
       sizes={sizes}
@@ -152,7 +153,7 @@ export default function ItemModal({
 
   const open = item !== null;
   const hasPhoto = images.length > 0;
-  const shots = hasPhoto ? images : [PLACEHOLDER];
+  const shots: (string | null)[] = hasPhoto ? images : [null];
   const multi = shots.length > 1;
 
   // Reset per-item state when a different item is opened, otherwise the
@@ -247,7 +248,7 @@ export default function ItemModal({
   const orderName =
     hasSizes && chosen ? `${item.name} (${chosen.label})` : item.name;
   const message =
-    `Hi Zino's, I'd like to order the ${orderName}` +
+    `Hi Zinosfood, I'd like to order the ${orderName}` +
     (priceLabel ? ` — ${priceLabel}` : "") +
     (when ? ` (${when}).` : ".");
   const href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
