@@ -10,7 +10,7 @@ import { LITRES, formatPrice, WHATSAPP } from "@/data/menu";
  */
 export default function Packages() {
   const ask = (name: string) =>
-    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hi Zinosfood, how much is ${name} per litre?`)}`;
+    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hi Zinosfood, I'd like to order ${name}.`)}`;
 
   return (
     <section id="litres" className="bg-blush">
@@ -19,7 +19,7 @@ export default function Packages() {
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-bq-red">Introducing</p>
             <h2 className="mt-3 font-display text-3xl uppercase text-char sm:text-5xl">SOUP &amp; FOOD BY THE LITRE</h2>
-            <p className="mt-3 max-w-md text-char/70">A different thing from the weekend package. Tap a food to ask Zino on WhatsApp.</p>
+            <p className="mt-3 max-w-md text-char/70">A different thing from the weekend package. Tap a food to order on WhatsApp.</p>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@ export default function Packages() {
             >
               <span className="font-display text-lg uppercase leading-tight text-char sm:text-xl">{p.name}</span>
               {p.sizes?.length ? (
-                <span className="mt-3 font-mono text-sm text-bq-red">from {formatPrice(Math.min(...p.sizes.map((s) => s.price)))}</span>
+                <span className="mt-3 block"><span className="block font-mono text-xs uppercase tracking-wider text-char/60">{p.sizes[0].label}</span><span className="font-mono text-sm text-bq-red">{formatPrice(p.sizes[0].price)}</span></span>
               ) : (
                 <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-bq-red">
                   Ask price

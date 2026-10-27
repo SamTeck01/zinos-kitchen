@@ -76,19 +76,18 @@ export const WEEKDAY_SPECIALS: MenuCategory[] = [
 ];
 
 /* ------------------------------------------------------ FOOD BY THE LITRE */
-/* Separate from the package. No prices confirmed yet, so none are shown:
-   each card asks on WhatsApp. Add `sizes` here when Zino sends them. */
+/* Separate from the package. Source: Zino's notebook page "STEW TO GO", 27 Oct 2026. */
 
 export const LITRES: MenuItem[] = [
-  { name: "Jollof Rice" },
-  { name: "Fried Rice" },
-  { name: "Stew" },
-  { name: "Soup" },
-  { name: "Beans" },
-  { name: "Amala" },
-  { name: "Eba" },
-  { name: "Fufu" },
-  { name: "Iyan (Pounded Yam)" },
+  { name: "Assorted Stew", sizes: [{ label: "1.5 Litres", price: 20000 }] },
+  { name: "Egusi", sizes: [{ label: "1.5 Litres", price: 21000 }] },
+  { name: "Jollof Rice (Nigerian Rice)", sizes: [{ label: "2 Litres", price: 22000 }] },
+  { name: "Basmati Jollof Rice", sizes: [{ label: "2 Litres", price: 40000 }] },
+  { name: "Efo Riro", sizes: [{ label: "1.5 Litres", price: 25800 }] },
+  { name: "Chicken Stew", sizes: [{ label: "1.5 Litres", price: 26800 }] },
+  { name: "Turkey Stew", sizes: [{ label: "1.5 Litres", price: 35800 }] },
+  { name: "Ila Alasepo", sizes: [{ label: "1.5 Litres", price: 18000 }] },
+  { name: "Goat Meat Soup", sizes: [{ label: "1.5 Litres", price: 30000 }] },
 ];
 
 export const LOCATIONS = {
