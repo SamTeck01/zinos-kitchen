@@ -7,7 +7,7 @@ import { FoodImage, imageFor } from "@/lib/slug";
 import { formatPrice, type MenuItem, type MenuCategory } from "@/data/menu";
 import { useCity } from "../data/cityContext";
 
-const price = (item: MenuItem) => item.price !== undefined ? formatPrice(item.price) : item.sizes?.length ? `from ${formatPrice(Math.min(...item.sizes.map((size) => size.price)))}` : "";
+const price = (item: MenuItem) => item.price !== undefined ? formatPrice(item.price) : item.sizes?.length === 1 ? `${formatPrice(item.sizes[0].price)} · ${item.sizes[0].label.replace(/ Litres?$/, "L")}` : item.sizes?.length ? `from ${formatPrice(Math.min(...item.sizes.map((size) => size.price)))}` : "";
 
 type Props = { categories?: MenuCategory[]; id?: string; eyebrow?: string; title?: string; when?: string };
 

@@ -67,8 +67,8 @@ export const WEEKDAY_SPECIALS: MenuCategory[] = [
     id: "wednesday",
     label: "Wednesday Special",
     items: [
-      { name: "Catfish Pepper Soup", desc: "Catfish, pepper soup broth", price: 4000 },
-      { name: "Goat Meat Pepper Soup", desc: "Goat meat, pepper soup broth", price: 6000 },
+      { name: "Catfish Pepper Soup", desc: "1 litre bowl, catfish, pepper soup broth", price: 4000 },
+      { name: "Goat Meat Pepper Soup", desc: "1 litre bowl, goat meat, pepper soup broth", price: 6000 },
       { name: "White Rice (add-on)", desc: "Plain white rice to go with your pepper soup", price: 1000 },
     ],
   },
@@ -79,15 +79,15 @@ export const WEEKDAY_SPECIALS: MenuCategory[] = [
 /* Separate from the package. Source: Zino's notebook page "STEW TO GO", 27 Oct 2026. */
 
 export const LITRES: MenuItem[] = [
-  { name: "Assorted Stew", sizes: [{ label: "1.5 Litres", price: 20000 }] },
-  { name: "Egusi", sizes: [{ label: "1.5 Litres", price: 21000 }] },
-  { name: "Jollof Rice (Nigerian Rice)", sizes: [{ label: "2 Litres", price: 22000 }] },
-  { name: "Basmati Jollof Rice", sizes: [{ label: "2 Litres", price: 40000 }] },
-  { name: "Efo Riro", sizes: [{ label: "1.5 Litres", price: 25800 }] },
-  { name: "Chicken Stew", sizes: [{ label: "1.5 Litres", price: 26800 }] },
-  { name: "Turkey Stew", sizes: [{ label: "1.5 Litres", price: 35800 }] },
-  { name: "Ila Alasepo", sizes: [{ label: "1.5 Litres", price: 18000 }] },
-  { name: "Goat Meat Soup", sizes: [{ label: "1.5 Litres", price: 30000 }] },
+  { name: "Assorted Stew", desc: "Tomato and pepper stew, assorted meat", sizes: [{ label: "1.5 Litres", price: 20000 }] },
+  { name: "Egusi", desc: "Ground melon seed soup", sizes: [{ label: "1.5 Litres", price: 21000 }] },
+  { name: "Jollof Rice (Nigerian Rice)", desc: "Jollof rice, Nigerian rice", sizes: [{ label: "2 Litres", price: 22000 }] },
+  { name: "Basmati Jollof Rice", desc: "Jollof rice, basmati rice", sizes: [{ label: "2 Litres", price: 40000 }] },
+  { name: "Efo Riro", desc: "Spinach, pepper sauce", sizes: [{ label: "1.5 Litres", price: 25800 }] },
+  { name: "Chicken Stew", desc: "Tomato and pepper stew, chicken", sizes: [{ label: "1.5 Litres", price: 26800 }] },
+  { name: "Turkey Stew", desc: "Tomato and pepper stew, turkey", sizes: [{ label: "1.5 Litres", price: 35800 }] },
+  { name: "Ila Alasepo", desc: "Okra soup, assorted meat", sizes: [{ label: "1.5 Litres", price: 18000 }] },
+  { name: "Goat Meat Soup", desc: "Goat meat, pepper soup", sizes: [{ label: "1.5 Litres", price: 30000 }] },
 ];
 
 export const LOCATIONS = {
@@ -146,3 +146,6 @@ export function nextDeliveryDay(now = new Date()): Date {
   return d;
 }
 export const fmtDay = (d: Date) => d.toLocaleDateString("en-NG", { weekday: "short", day: "numeric", month: "short" });
+
+/** BQ MenuSection shape for the per-litre section. */
+export const LITRE_MENU: MenuCategory[] = [{ id: "stew-to-go", label: "Stew To Go", items: LITRES }];

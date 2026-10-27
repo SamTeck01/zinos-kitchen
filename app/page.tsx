@@ -1,9 +1,8 @@
-import { LOCATIONS, ZINO, INSTAGRAM, WEEKDAY_SPECIALS } from "@/data/menu";
+import { LOCATIONS, ZINO, INSTAGRAM, WEEKDAY_SPECIALS, LITRE_MENU } from "@/data/menu";
 import Closing from "../components/Closing";
 import Footer from "../components/Footer";
 import HeroOverlay from "../components/HeroOverlay";
 import OrderForm from "../components/OrderForm";
-import Packages from "../components/Packages";
 import MenuSection from "../components/MenuSection";
 
 export default function Home() {
@@ -23,7 +22,7 @@ export default function Home() {
         </div>
       </section>
       <MenuSection id="weekday" categories={WEEKDAY_SPECIALS} eyebrow="Monday – Thursday" title="WEEKDAY SPECIALS" />
-      <Packages />
+      <MenuSection id="litres" categories={LITRE_MENU} eyebrow="Introducing" title="SOUP & FOOD BY THE LITRE" />
       <Closing />
       <Footer />
     </>
