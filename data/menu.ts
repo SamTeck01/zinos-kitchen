@@ -63,7 +63,7 @@ export const ZINO: MenuCategory[] = [
 export const WEEKDAY_SPECIALS: MenuCategory[] = [
   { id: "monday", label: "Monday Special", items: [{ name: "Gizdodo", desc: "Chicken gizzard, fried plantain, pepper sauce", price: 4500 },
       { name: "Gizdodo with White Rice", desc: "Gizdodo, white rice", price: 5500 }] },
-  { id: "tuesday", label: "Tuesday Special", items: [{ name: "Ewa Agoyin", desc: "Mashed beans, agoyin pepper sauce" }] },
+  { id: "tuesday", label: "Tuesday Special", items: [{ name: "Ewa Agoyin", desc: "Mashed beans, agoyin pepper sauce, fish, ponmo, egg", price: 2500 }] },
   {
     id: "wednesday",
     label: "Wednesday Special",
