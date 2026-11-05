@@ -57,8 +57,8 @@ export const ZINO: MenuCategory[] = [
 /* Source: Zino's WhatsApp, 27 Oct 2026. One special per weekday, Monday to
    Thursday, no Friday. The weekend package stays the main offer.
    Wednesday is pepper soup: catfish N4,000, goat meat N6,000, white rice +N1,000
-   (sold by the bowl — Zino said not to write "litre"). The other days have no
-   price yet, so they ask on WhatsApp. day: 1 = Monday … 4 = Thursday. */
+   (sold by the bowl — Zino said not to write "litre"). Thursday Ofada N3,750
+   (Zino, 5 Nov 2026). day: 1 = Monday … 4 = Thursday. */
 
 export const WEEKDAY_SPECIALS: MenuCategory[] = [
   { id: "monday", label: "Monday Special", items: [{ name: "Gizdodo", desc: "Chicken gizzard, fried plantain, pepper sauce", price: 4500 },
@@ -73,7 +73,7 @@ export const WEEKDAY_SPECIALS: MenuCategory[] = [
       { name: "White Rice (add-on)", desc: "Plain white rice to go with your pepper soup", price: 1000 },
     ],
   },
-  { id: "thursday", label: "Thursday Special", items: [{ name: "Ofada Rice with Ofada Sauce", desc: "Ofada rice, ofada sauce" }] },
+  { id: "thursday", label: "Thursday Special", items: [{ name: "Ofada Rice with Ofada Sauce", desc: "Ofada rice, ofada sauce", price: 3750 }] },
 ];
 
 /* ------------------------------------------------------ FOOD BY THE LITRE */
