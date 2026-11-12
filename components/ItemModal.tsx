@@ -150,6 +150,9 @@ export default function ItemModal({
 
   const [sizeIndex, setSizeIndex] = useState(0);
   const [slide, setSlide] = useState(0);
+  // Kept across items on purpose: someone ordering two specials lives in the
+  // same hostel both times.
+  const [location, setLocation] = useState("");
 
   const open = item !== null;
   const hasPhoto = images.length > 0;
@@ -192,7 +195,7 @@ export default function ItemModal({
       const panel = panelRef.current;
       if (!panel) return;
       const focusables = panel.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])',
       );
       if (focusables.length === 0) return;
 
@@ -247,11 +250,18 @@ export default function ItemModal({
   // Include the size so the order isn't ambiguous on the other end.
   const orderName =
     hasSizes && chosen ? `${item.name} (${chosen.label})` : item.name;
-  const message =
+  const place = location.trim();
+  const message = [
     `Hi Zinosfood, I'd like to order the ${orderName}` +
-    (priceLabel ? ` — ${priceLabel}` : "") +
-    (when ? ` (${when}).` : ".");
+      (priceLabel ? ` — ${priceLabel}` : "") +
+      (when ? ` (${when}).` : "."),
+    `Delivery to: ${place}`,
+  ].join("\n");
   const href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(message)}`;
+  const send = () => {
+    if (!place) return;
+    window.open(href, "_blank", "noopener");
+  };
 
   const includes = item.includes ?? [];
   const hasIncludes = includes.length > 0;
@@ -436,12 +446,25 @@ export default function ItemModal({
             <p className="mt-5 font-mono text-3xl text-char">{priceLabel}</p>
           )}
 
+          <label className="mt-5 block text-sm text-char">
+            Where on campus?
+            <input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && send()}
+              placeholder="Hostel / hall and room"
+              autoComplete="street-address"
+              required
+              className="mt-1 w-full min-h-12 rounded-xl border border-char/15 bg-white px-3 text-base outline-none transition-[border-color] duration-150 focus:border-bq-red"
+            />
+          </label>
+
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex min-h-14 w-full items-center justify-center rounded-full bg-bq-red px-5 text-center font-display text-sm uppercase tracking-wide text-white transition-transform active:scale-[0.98]"
+            <button
+              type="button"
+              onClick={send}
+              disabled={!place}
+              className="flex min-h-14 w-full items-center justify-center rounded-full bg-bq-red px-5 text-center font-display text-sm uppercase tracking-wide text-white transition-[transform,opacity] active:scale-[0.98] disabled:opacity-50"
             >
               <Image
                 src="/images/logo-whatsapp.webp"
@@ -451,7 +474,7 @@ export default function ItemModal({
                 className="mr-2 h-6 w-6 rounded-full object-contain"
               />
               Order on WhatsApp
-            </a>
+            </button>
           </div>
 
           <p className="mt-3 text-center font-mono text-[0.7rem] uppercase tracking-wider text-char/50">
