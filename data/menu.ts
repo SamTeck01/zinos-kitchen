@@ -73,7 +73,7 @@ export const WEEKDAY_SPECIALS: MenuCategory[] = [
       { name: "White Rice (add-on)", desc: "Plain white rice to go with your pepper soup", price: 1000 },
     ],
   },
-  { id: "thursday", label: "Thursday Special", items: [{ name: "Ofada Rice with Ofada Sauce", desc: "Ofada rice, ofada sauce" }] },
+  { id: "thursday", label: "Thursday Special", items: [{ name: "Ofada Rice with Ofada Sauce", desc: "Ofada rice, ofada sauce", price: 4000 }] },
 ];
 
 /* ------------------------------------------------------ FOOD BY THE LITRE */
